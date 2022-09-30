@@ -1,0 +1,16 @@
+name: CICD
+on: push
+jobs:
+  cicd:
+    runs-on: ubuntu-latest
+    permissions:
+       contents: read
+       packages: write
+       id-token: write
+    steps:
+      # https://github.com/internetarchive/cicd
+      - uses: internetarchive/cicd@v1
+        with:
+          BASE_DOMAIN: 'netlobo.com'
+          NOMAD_ADDR: 'http://bigl.netlobo.com:4646'
+          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
