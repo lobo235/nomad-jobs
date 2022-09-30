@@ -73,7 +73,7 @@ job "mc-ftb-plexiglass1" {
     # automatically transitioned to unhealthy. Transitioning to unhealthy will
     # fail the deployment and potentially roll back the job if "auto_revert" is
     # set to true.
-    healthy_deadline = "5m"
+    healthy_deadline = "10m"
 
     # The "progress_deadline" parameter specifies the deadline in which an
     # allocation must be marked as healthy. The deadline begins when the first
@@ -81,7 +81,7 @@ job "mc-ftb-plexiglass1" {
     # as part of the deployment transitions to a healthy state. If no allocation
     # transitions to the healthy state before the progress deadline, the
     # deployment is marked as failed.
-    progress_deadline = "10m"
+    progress_deadline = "20m"
 
     # The "auto_revert" parameter specifies if the job should auto-revert to the
     # last stable job on deployment failure. A job is marked as stable if all the
@@ -125,7 +125,7 @@ job "mc-ftb-plexiglass1" {
     # Specifies the deadline in which the allocation must be marked as healthy
     # after which the allocation is automatically transitioned to unhealthy. This
     # is specified using a label suffix like "2m" or "1h".
-    healthy_deadline = "5m"
+    healthy_deadline = "10m"
   }
   # The "group" stanza defines a series of tasks that should be co-located on
   # the same Nomad client. Any task within a group will be placed on the same
@@ -360,8 +360,9 @@ job "mc-ftb-plexiglass1" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cpu    = 10000 # 10000 MHz
-        memory = 6144 # 6144MB
+        cores      = 4
+        memory     = 4096 # 4GB
+        memory_max = 6144 # 6GB
       }
 
 
@@ -426,7 +427,7 @@ job "mc-ftb-plexiglass1" {
         TYPE = "FTBA"
         FTB_MODPACK_ID = 96
         FTB_MODPACK_VERSION_ID = 2261
-        MAX_MEMORY = "6G"
+        MAX_MEMORY = "4G"
       }
     }
   }
