@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-ftb-plexiglass1" {
+job "mc-ftb-inferno1" {
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
@@ -136,7 +136,7 @@ job "mc-ftb-plexiglass1" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-ftb-plexiglass1" {
+  group "mc-ftb-inferno1" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -167,7 +167,7 @@ job "mc-ftb-plexiglass1" {
     #     https://www.nomadproject.io/docs/job-specification/service
     #
     service {
-      name     = "mc-ftb-plexiglass1"
+      name     = "mc-ftb-inferno1"
       tags     = ["global", "minecraft", "ftb"]
       port     = "mc"
       provider = "consul"
@@ -293,7 +293,7 @@ job "mc-ftb-plexiglass1" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-ftb-plexiglass1" {
+    task "mc-ftb-inferno1" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -311,7 +311,7 @@ job "mc-ftb-plexiglass1" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/ftb_plexiglass1/data:/data"
+          "/opt/minecraft/ftb_inferno1/data:/data"
         ]
       }
 
@@ -416,16 +416,16 @@ job "mc-ftb-plexiglass1" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "Barlow Craft - FTB Plexiglass Mountain1"
+        SERVER_NAME = "Barlow Craft - FTB Inferno1"
         MODE = "survival"
         DIFFICULTY = "hard"
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - FTB Plexiglass Mountain1"
+        SEED = "Barlow Craft - FTB Inferno1"
         OPS = bpexp235
-        MOTD = "Barlow Craft - FTB Plexiglass Mountain1"
+        MOTD = "Barlow Craft - FTB Inferno1"
         TYPE = "FTBA"
-        FTB_MODPACK_ID = 96
-        FTB_MODPACK_VERSION_ID = 2261
+        FTB_MODPACK_ID = 99
+        FTB_MODPACK_VERSION_ID = 2265
         MAX_MEMORY = "6G"
       }
     }
