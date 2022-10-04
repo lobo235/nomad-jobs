@@ -142,6 +142,10 @@ job "mc-ftb-inferno1" {
     # to 1.
     count = 1
 
+    meta {
+      mc-router-register = "true"
+    }
+
     # The "network" stanza specifies the network configuration for the allocation
     # including requesting port bindings.
     #
@@ -151,7 +155,7 @@ job "mc-ftb-inferno1" {
     #     https://www.nomadproject.io/docs/job-specification/network
     #
     network {
-      port "mc" {
+      port "minecraft" {
         to = 25565
       }
     }
@@ -168,8 +172,8 @@ job "mc-ftb-inferno1" {
     #
     service {
       name     = "mc-ftb-inferno1"
-      tags     = ["global", "minecraft", "ftb"]
-      port     = "mc"
+      tags     = ["global", "minecraft", "tcp", "ftb", "mc-router-register"]
+      port     = "minecraft"
       provider = "consul"
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -183,7 +187,6 @@ job "mc-ftb-inferno1" {
         interval = "10s"
         timeout  = "2s"
       }
-
     }
 
     # The "restart" stanza configures a group's behavior on task failure. If
@@ -304,7 +307,7 @@ job "mc-ftb-inferno1" {
       # documentation for more information.
       config {
         image = "itzg/minecraft-server"
-        ports = ["mc"]
+        ports = ["minecraft"]
 
         # The "auth_soft_fail" configuration instructs Nomad to try public
         # repositories if the task fails to authenticate when pulling images

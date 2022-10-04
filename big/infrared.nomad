@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-ftb-plexiglass1" {
+job "infrared" {
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
@@ -73,7 +73,7 @@ job "mc-ftb-plexiglass1" {
     # automatically transitioned to unhealthy. Transitioning to unhealthy will
     # fail the deployment and potentially roll back the job if "auto_revert" is
     # set to true.
-    healthy_deadline = "10m"
+    healthy_deadline = "5m"
 
     # The "progress_deadline" parameter specifies the deadline in which an
     # allocation must be marked as healthy. The deadline begins when the first
@@ -81,7 +81,7 @@ job "mc-ftb-plexiglass1" {
     # as part of the deployment transitions to a healthy state. If no allocation
     # transitions to the healthy state before the progress deadline, the
     # deployment is marked as failed.
-    progress_deadline = "20m"
+    progress_deadline = "10m"
 
     # The "auto_revert" parameter specifies if the job should auto-revert to the
     # last stable job on deployment failure. A job is marked as stable if all the
@@ -125,7 +125,7 @@ job "mc-ftb-plexiglass1" {
     # Specifies the deadline in which the allocation must be marked as healthy
     # after which the allocation is automatically transitioned to unhealthy. This
     # is specified using a label suffix like "2m" or "1h".
-    healthy_deadline = "10m"
+    healthy_deadline = "5m"
   }
   # The "group" stanza defines a series of tasks that should be co-located on
   # the same Nomad client. Any task within a group will be placed on the same
@@ -136,7 +136,7 @@ job "mc-ftb-plexiglass1" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-ftb-plexiglass1" {
+  group "infrared" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -152,7 +152,10 @@ job "mc-ftb-plexiglass1" {
     #
     network {
       port "minecraft" {
-        to = 25565
+        static = 25565
+      }
+      port "api" {
+        to = 7069
       }
     }
 
@@ -167,8 +170,8 @@ job "mc-ftb-plexiglass1" {
     #     https://www.nomadproject.io/docs/job-specification/service
     #
     service {
-      name     = "mc-ftb-plexiglass1"
-      tags     = ["global", "minecraft", "ftb"]
+      name     = "infrared"
+      tags     = ["global", "minecraft", "tcp"]
       port     = "minecraft"
       provider = "consul"
 
@@ -180,10 +183,10 @@ job "mc-ftb-plexiglass1" {
       check {
         name     = "alive"
         type     = "tcp"
+        port     = "minecraft"
         interval = "10s"
         timeout  = "2s"
       }
-
     }
 
     # The "restart" stanza configures a group's behavior on task failure. If
@@ -220,7 +223,7 @@ job "mc-ftb-plexiglass1" {
     #
     #     https://www.nomadproject.io/docs/job-specification/ephemeral_disk
     #
-    ephemeral_disk {
+    # ephemeral_disk {
       # When sticky is true and the task group is updated, the scheduler
       # will prefer to place the updated allocation on the same node and
       # will migrate the data. This is useful for tasks that store data
@@ -233,8 +236,8 @@ job "mc-ftb-plexiglass1" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 5000
-    }
+      # size = 250
+    # }
 
     # The "affinity" stanza enables operators to express placement preferences
     # based on node attributes or metadata.
@@ -293,7 +296,7 @@ job "mc-ftb-plexiglass1" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-ftb-plexiglass1" {
+    task "infrared" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -303,7 +306,7 @@ job "mc-ftb-plexiglass1" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "itzg/minecraft-server"
+        image = "haveachin/infrared"
         ports = ["minecraft"]
 
         # The "auth_soft_fail" configuration instructs Nomad to try public
@@ -311,7 +314,7 @@ job "mc-ftb-plexiglass1" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/ftb_plexiglass1/data:/data"
+          "/opt/infrared/configs:/configs"
         ]
       }
 
@@ -360,9 +363,9 @@ job "mc-ftb-plexiglass1" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 4
-        memory     = 6144 # 6GB
-        memory_max = 8192 # 8GB
+        cpu        = 500  # 500Mhz
+        memory     = 128 # 128MB
+        memory_max = 256 # 256MB
       }
 
 
@@ -414,20 +417,7 @@ job "mc-ftb-plexiglass1" {
       # and killing the task. If not set a default is used.
       # kill_timeout = "20s"
       env {
-        EULA = "TRUE"
-        UID = 1001
-        GID = 1001
-        SERVER_NAME = "Barlow Craft - FTB Plexiglass Mountain1"
-        MODE = "survival"
-        DIFFICULTY = "hard"
-        MAX_PLAYERS = 20
-        SEED = "Barlow Craft - FTB Plexiglass Mountain1"
-        OPS = bpexp235
-        MOTD = "Barlow Craft - FTB Plexiglass Mountain1"
-        TYPE = "FTBA"
-        FTB_MODPACK_ID = 96
-        FTB_MODPACK_VERSION_ID = 2261
-        MAX_MEMORY = "6G"
+        INFRARED_CONFIG_PATH = "/configs"
       }
     }
   }
