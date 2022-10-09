@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-ftb-plexiglass1" {
+job "mc-vanilla10" {
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
@@ -136,7 +136,7 @@ job "mc-ftb-plexiglass1" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-ftb-plexiglass1" {
+  group "mc-vanilla10" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -168,12 +168,12 @@ job "mc-ftb-plexiglass1" {
     #
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "ftb_plexiglass", "mc-router-register"]
+      tags     = ["global", "minecraft", "tcp", "vanilla10", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "plexiglass.big.netlobo.com"
+        externalServerName = "vanilla10.big.netlobo.com"
       }
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -297,7 +297,7 @@ job "mc-ftb-plexiglass1" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-ftb-plexiglass1" {
+    task "mc-vanilla10" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -315,7 +315,7 @@ job "mc-ftb-plexiglass1" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/ftb_plexiglass1/data:/data"
+          "/opt/minecraft/vanilla10/data:/data"
         ]
       }
 
@@ -364,9 +364,9 @@ job "mc-ftb-plexiglass1" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 8
-        memory     = 8192  # 8GB
-        memory_max = 10240 # 10GB
+        cores      = 4
+        memory     = 2048  # 2GB
+        memory_max = 2560  # 2.5GB
       }
 
 
@@ -421,18 +421,15 @@ job "mc-ftb-plexiglass1" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "Barlow Craft - FTB Plexiglass Mountain1"
+        SERVER_NAME = "Barlow Craft - Vanilla10"
         MODE = "survival"
         DIFFICULTY = "hard"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - FTB Plexiglass Mountain1"
+        SEED = "Barlow Craft - Vanilla10"
         OPS = bpexp235
-        MOTD = "Barlow Craft - FTB Plexiglass Mountain1"
-        TYPE = "FTBA"
-        FTB_MODPACK_ID = 96
-        FTB_MODPACK_VERSION_ID = 2261
-        MAX_MEMORY = "8G"
+        MOTD = "Barlow Craft - Vanilla10"
+        MAX_MEMORY = "2G"
       }
     }
   }

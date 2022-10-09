@@ -223,7 +223,7 @@ job "mc-router" {
       # "attempts" times within the interval. "delay" mode delays the next
       # restart until the next interval. "fail" mode does not restart the task
       # if "attempts" has been hit within the interval.
-      mode = "fail"
+      mode = "delay"
     }
 
     # The "ephemeral_disk" stanza instructs Nomad to utilize an ephemeral disk
@@ -376,7 +376,7 @@ job "mc-router" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cpu        = 500  # 500Mhz
+        cpu        = 5000  # 500Mhz
         memory     = 128 # 128MB
         memory_max = 256 # 256MB
       }
@@ -402,11 +402,13 @@ job "mc-router" {
       # for tasks that prefer those to config files. The task will be restarted
       # when data pulled from Consul or Vault changes.
       #
-      # template {
-      #   data        = "KEY={{ key \"service/my-key\" }}"
-      #   destination = "local/file.env"
-      #   env         = true
-      # }
+      template {
+        data        = <<EOF
+MAPPING={{ $first := true }}{{- range service "mc-router-register.minecraft" }}{{ if $first }}{{ $first = false }}{{ else }},{{ end }}{{ .ServiceMeta.externalServerName }}={{ .Address }}:{{ .Port }}{{ end -}}
+EOF
+        destination = "local/mapping.env"
+        env         = true
+      }
 
       # The "vault" stanza instructs the Nomad client to acquire a token from
       # a HashiCorp Vault server. The Nomad servers must be configured and
@@ -431,7 +433,6 @@ job "mc-router" {
       # kill_timeout = "20s"
       env {
         API_BINDING = ":${NOMAD_PORT_api}"
-        MAPPING     = "mc-ftb-plexiglass1.service.big.netlobo.com=mc-ftb-plexiglass1.service.big.netlobo.com:24472"
       }
     }
   }

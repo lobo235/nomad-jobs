@@ -142,10 +142,6 @@ job "mc-ftb-inferno1" {
     # to 1.
     count = 1
 
-    meta {
-      mc-router-register = "true"
-    }
-
     # The "network" stanza specifies the network configuration for the allocation
     # including requesting port bindings.
     #
@@ -171,10 +167,14 @@ job "mc-ftb-inferno1" {
     #     https://www.nomadproject.io/docs/job-specification/service
     #
     service {
-      name     = "mc-ftb-inferno1"
-      tags     = ["global", "minecraft", "tcp", "ftb", "mc-router-register"]
+      name     = "minecraft"
+      tags     = ["global", "minecraft", "tcp", "ftb_inferno", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
+      meta {
+        mc-router-register = "true"
+        externalServerName = "inferno.big.netlobo.com"
+      }
 
       # The "check" stanza instructs Nomad to create a Consul health check for
       # this service. A sample check is provided here for your convenience;
@@ -423,6 +423,7 @@ job "mc-ftb-inferno1" {
         SERVER_NAME = "Barlow Craft - FTB Inferno1"
         MODE = "survival"
         DIFFICULTY = "hard"
+        VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - FTB Inferno1"
         OPS = bpexp235
