@@ -315,7 +315,8 @@ job "mc-ftb-plexiglass1" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/ftb_plexiglass1/data:/data"
+          "/opt/minecraft/ftb_plexiglass1/data:/data",
+          "/opt/minecraft/ftb_plexiglass1/mods:/mods"
         ]
       }
 
@@ -424,6 +425,8 @@ job "mc-ftb-plexiglass1" {
         SERVER_NAME = "Barlow Craft - FTB Plexiglass Mountain1"
         MODE = "survival"
         DIFFICULTY = "hard"
+        ALLOW_FLIGHT = "TRUE"
+        ENABLE_COMMAND_BLOCK = "TRUE"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - FTB Plexiglass Mountain1"
@@ -432,6 +435,8 @@ job "mc-ftb-plexiglass1" {
         TYPE = "FTBA"
         FTB_MODPACK_ID = 96
         FTB_MODPACK_VERSION_ID = 2261
+        REMOVE_OLD_MODS = "TRUE"
+        REMOVE_OLD_MODS_INCLUDE = "TerraBlender*.jar"
         MAX_MEMORY = "8G"
       }
     }
