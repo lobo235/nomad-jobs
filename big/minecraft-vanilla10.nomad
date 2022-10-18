@@ -365,8 +365,8 @@ job "mc-vanilla10" {
       #
       resources {
         cores      = 4
-        memory     = 2048  # 2GB
-        memory_max = 2560  # 2.5GB
+        memory     = 2560  # 2.5GB
+        memory_max = 3072  # 3GB
       }
 
 

@@ -366,8 +366,8 @@ job "mc-ftb-plexiglass1" {
       #
       resources {
         cores      = 8
-        memory     = 8192  # 8GB
-        memory_max = 10240 # 10GB
+        memory     = 10240  # 10GB
+        memory_max = 12288 # 12GB
       }
 
 
@@ -437,7 +437,7 @@ job "mc-ftb-plexiglass1" {
         FTB_MODPACK_VERSION_ID = 2261
         REMOVE_OLD_MODS = "TRUE"
         REMOVE_OLD_MODS_INCLUDE = "TerraBlender*.jar"
-        MAX_MEMORY = "8G"
+        MAX_MEMORY = "9G"
       }
     }
   }

@@ -364,7 +364,7 @@ job "mc-ftb-inferno1" {
       #
       resources {
         cores      = 4
-        memory     = 4096 # 4GB
+        memory     = 5120 # 5GB
         memory_max = 6144 # 6GB
       }
 
