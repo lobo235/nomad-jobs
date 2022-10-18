@@ -179,6 +179,7 @@ job "plex" {
       # "service" stanza documentation.
       check {
         type = "tcp"
+        port = "plex"
         interval = "30s"
         timeout = "20s"
 
