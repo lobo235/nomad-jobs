@@ -365,9 +365,9 @@ job "mc-ftb-plexiglass1" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 8
-        memory     = 10240  # 10GB
-        memory_max = 12288 # 12GB
+        cores      = 4
+        memory     = 7168  # 7GB
+        memory_max = 8192  # 8GB
       }
 
 
@@ -427,7 +427,7 @@ job "mc-ftb-plexiglass1" {
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
         ENABLE_COMMAND_BLOCK = "TRUE"
-        VIEW_DISTANCE = 6
+        VIEW_DISTANCE = 7
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - FTB Plexiglass Mountain1"
         OPS = bpexp235
@@ -437,7 +437,7 @@ job "mc-ftb-plexiglass1" {
         FTB_MODPACK_VERSION_ID = 2261
         REMOVE_OLD_MODS = "TRUE"
         REMOVE_OLD_MODS_INCLUDE = "TerraBlender*.jar"
-        MAX_MEMORY = "9G"
+        MAX_MEMORY = "6G"
       }
     }
   }

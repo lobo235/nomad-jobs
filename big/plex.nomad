@@ -321,7 +321,7 @@ job "plex" {
           "/mnt/media/tv-hidden:/tv-hidden",
           "/mnt/media/movies:/movies",
           "/mnt/media/movies-hidden:/movies-hidden",
-          "/tmp/plex/transcode:/transcode"
+          "/opt/plex/transcode:/transcode"
         ]
       }
 
@@ -370,9 +370,9 @@ job "plex" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 8
-        memory     = 2048  # 2GB
-        memory_max = 3072  # 3GB
+        cores      = 12
+        memory     = 4096  # 4GB
+        memory_max = 5120  # 5GB
       }
 
 

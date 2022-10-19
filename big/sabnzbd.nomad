@@ -375,9 +375,9 @@ job "sabnzbd" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 1
-        memory     = 1024  # 1GB
-        memory_max = 1536  # 1.5GB
+        cores      = 2
+        memory     = 4096  # 4GB
+        memory_max = 5120  # 5GB
       }
 
 

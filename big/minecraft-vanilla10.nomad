@@ -364,7 +364,7 @@ job "mc-vanilla10" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 4
+        cores      = 2
         memory     = 2560  # 2.5GB
         memory_max = 3072  # 3GB
       }
