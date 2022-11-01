@@ -237,7 +237,7 @@ job "mc-ftb-plexiglass1" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 5000
+      size = 15000
     }
 
     # The "affinity" stanza enables operators to express placement preferences
@@ -366,8 +366,8 @@ job "mc-ftb-plexiglass1" {
       #
       resources {
         cores      = 4
-        memory     = 7168  # 7GB
-        memory_max = 8192  # 8GB
+        memory     = 12288  # 12GB
+        memory_max = 14336  # 14GB
       }
 
 
@@ -427,17 +427,15 @@ job "mc-ftb-plexiglass1" {
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
         ENABLE_COMMAND_BLOCK = "TRUE"
-        VIEW_DISTANCE = 7
+        VIEW_DISTANCE = 10
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - FTB Plexiglass Mountain1"
         OPS = bpexp235
         MOTD = "Barlow Craft - FTB Plexiglass Mountain1"
         TYPE = "FTBA"
         FTB_MODPACK_ID = 96
-        FTB_MODPACK_VERSION_ID = 2261
-        REMOVE_OLD_MODS = "TRUE"
-        REMOVE_OLD_MODS_INCLUDE = "TerraBlender*.jar"
-        MAX_MEMORY = "6G"
+        FTB_MODPACK_VERSION_ID = 2274
+        MAX_MEMORY = "10G"
       }
     }
   }
