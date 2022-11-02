@@ -369,8 +369,8 @@ job "lidarr" {
       #
       resources {
         cores      = 1
-        memory     = 1024  # 1GB
-        memory_max = 1536  # 1.5GB
+        memory     = 2048  # 2GB
+        memory_max = 2560  # 2.5GB
       }
 
 

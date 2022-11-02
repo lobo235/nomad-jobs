@@ -372,8 +372,8 @@ job "plex" {
       #
       resources {
         cores      = 12
-        memory     = 4096  # 4GB
-        memory_max = 5120  # 5GB
+        memory     = 6144  # 6GB
+        memory_max = 7168  # 7GB
       }
 
 
