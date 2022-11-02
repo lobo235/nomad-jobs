@@ -322,6 +322,7 @@ job "sabnzbd" {
         volumes = [
           "/opt/sabnzbd/config:/config",
           "/mnt/media/downloads:/downloads",
+          "/mnt/media/music:/music",
           "/mnt/media/tv:/tv",
           "/mnt/media/tv-hidden:/tv-hidden",
           "/mnt/media/movies:/movies",

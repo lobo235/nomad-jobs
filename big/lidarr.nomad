@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "plex" {
+job "lidarr" {
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
@@ -136,7 +136,7 @@ job "plex" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "plex" {
+  group "lidarr" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -151,8 +151,8 @@ job "plex" {
     #     https://www.nomadproject.io/docs/job-specification/network
     #
     network {
-      port "plex" {
-        static = 32400
+      port "lidarr" {
+        static = 8686
       }
       mode = "host"
     }
@@ -168,9 +168,9 @@ job "plex" {
     #     https://www.nomadproject.io/docs/job-specification/service
     #
     service {
-      name     = "plex"
-      port     = "plex"
-      tags     = ["global", "tcp", "plex"]
+      name     = "lidarr"
+      port     = "lidarr"
+      tags     = ["global", "tcp", "lidarr"]
       provider = "consul"
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -178,8 +178,9 @@ job "plex" {
       # uncomment it to enable it. The "check" stanza is documented in the
       # "service" stanza documentation.
       check {
-        type = "tcp"
-        port = "plex"
+        type = "http"
+        path = "/system/status"
+        port = "lidarr"
         interval = "30s"
         timeout = "20s"
 
@@ -298,7 +299,7 @@ job "plex" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "plex" {
+    task "lidarr" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -308,20 +309,16 @@ job "plex" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "linuxserver/plex"
+        image = "linuxserver/lidarr"
         network_mode = "host"
-        ports = ["plex"]
+        ports = ["lidarr"]
         # The "auth_soft_fail" configuration instructs Nomad to try public
         # repositories if the task fails to authenticate when pulling images
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/plex/config:/config",
-          "/mnt/media/tv:/tv",
-          "/mnt/media/tv-hidden:/tv-hidden",
-          "/mnt/media/movies:/movies",
-          "/mnt/media/movies-hidden:/movies-hidden",
-          "/opt/plex/transcode:/transcode",
+          "/opt/lidarr/config:/config",
+          "/mnt/media/downloads:/downloads",
           "/mnt/media/music:/music"
         ]
       }
@@ -371,9 +368,9 @@ job "plex" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 12
-        memory     = 4096  # 4GB
-        memory_max = 5120  # 5GB
+        cores      = 1
+        memory     = 1024  # 1GB
+        memory_max = 1536  # 1.5GB
       }
 
 
@@ -427,7 +424,7 @@ job "plex" {
       env {
         PUID = 1002
         PGID = 1002
-        VERSION = "docker"
+        TZ = "America/Denver"
         UMASK_SET = "022"
       }
     }
