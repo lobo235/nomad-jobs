@@ -434,7 +434,7 @@ job "mc-ftb-plexiglass1" {
         MOTD = "Barlow Craft - FTB Plexiglass Mountain1"
         TYPE = "FTBA"
         FTB_MODPACK_ID = 96
-        FTB_MODPACK_VERSION_ID = 2274
+        FTB_MODPACK_VERSION_ID = 2284
         MAX_MEMORY = "10G"
       }
     }
