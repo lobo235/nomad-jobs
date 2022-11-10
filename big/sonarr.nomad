@@ -370,8 +370,8 @@ job "sonarr" {
       #
       resources {
         cores      = 1
-        memory     = 2048  # 2GB
-        memory_max = 2560  # 2.5GB
+        memory     = 3072  # 3GB
+        memory_max = 4096  # 4GB
       }
 
 
