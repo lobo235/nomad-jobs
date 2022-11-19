@@ -66,7 +66,7 @@ job "mc-vanilla10" {
     # The "min_healthy_time" parameter specifies the minimum time the allocation
     # must be in the healthy state before it is marked as healthy and unblocks
     # further allocations from being updated.
-    min_healthy_time = "10s"
+    min_healthy_time = "30s"
 
     # The "healthy_deadline" parameter specifies the deadline in which the
     # allocation must be marked as healthy after which the allocation is
@@ -120,7 +120,7 @@ job "mc-vanilla10" {
     # Specifies the minimum time the allocation must be in the healthy state
     # before it is marked as healthy and unblocks further allocations from being
     # migrated. This is specified using a label suffix like "30s" or "15m".
-    min_healthy_time = "10s"
+    min_healthy_time = "30s"
 
     # Specifies the deadline in which the allocation must be marked as healthy
     # after which the allocation is automatically transitioned to unhealthy. This
@@ -184,8 +184,8 @@ job "mc-vanilla10" {
       check {
         name     = "alive"
         type     = "tcp"
-        interval = "10s"
-        timeout  = "2s"
+        interval = "30s"
+        timeout  = "5s"
       }
 
     }
@@ -427,7 +427,7 @@ job "mc-vanilla10" {
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - Vanilla10"
-        OPS = bpexp235
+        OPS = "bpexp235"
         MOTD = "Barlow Craft - Vanilla10"
         MAX_MEMORY = "2G"
       }

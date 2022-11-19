@@ -66,7 +66,7 @@ job "mc-ftb-inferno1" {
     # The "min_healthy_time" parameter specifies the minimum time the allocation
     # must be in the healthy state before it is marked as healthy and unblocks
     # further allocations from being updated.
-    min_healthy_time = "10s"
+    min_healthy_time = "30s"
 
     # The "healthy_deadline" parameter specifies the deadline in which the
     # allocation must be marked as healthy after which the allocation is
@@ -120,7 +120,7 @@ job "mc-ftb-inferno1" {
     # Specifies the minimum time the allocation must be in the healthy state
     # before it is marked as healthy and unblocks further allocations from being
     # migrated. This is specified using a label suffix like "30s" or "15m".
-    min_healthy_time = "10s"
+    min_healthy_time = "30s"
 
     # Specifies the deadline in which the allocation must be marked as healthy
     # after which the allocation is automatically transitioned to unhealthy. This
@@ -184,8 +184,8 @@ job "mc-ftb-inferno1" {
       check {
         name     = "alive"
         type     = "tcp"
-        interval = "10s"
-        timeout  = "2s"
+        interval = "30s"
+        timeout  = "5s"
       }
     }
 
@@ -426,11 +426,11 @@ job "mc-ftb-inferno1" {
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - FTB Inferno1"
-        OPS = bpexp235
+        OPS = "bpexp235"
         MOTD = "Barlow Craft - FTB Inferno1"
         TYPE = "FTBA"
         FTB_MODPACK_ID = 99
-        FTB_MODPACK_VERSION_ID = 2265
+        FTB_MODPACK_VERSION_ID = 2285
         MAX_MEMORY = "4G"
       }
     }

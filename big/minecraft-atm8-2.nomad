@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-ftb-plexiglass1" {
+job "mc-atm8-2" {
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
@@ -136,7 +136,7 @@ job "mc-ftb-plexiglass1" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-ftb-plexiglass1" {
+  group "mc-atm8-2" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -168,12 +168,12 @@ job "mc-ftb-plexiglass1" {
     #
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "ftb_plexiglass", "mc-router-register"]
+      tags     = ["global", "minecraft", "tcp", "atm8-2", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "plexiglass.big.netlobo.com"
+        externalServerName = "atm8-2.big.netlobo.com"
       }
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -297,7 +297,7 @@ job "mc-ftb-plexiglass1" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-ftb-plexiglass1" {
+    task "mc-atm8-2" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -315,8 +315,10 @@ job "mc-ftb-plexiglass1" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/ftb_plexiglass1/data:/data",
-          "/opt/minecraft/ftb_plexiglass1/mods:/mods"
+          "/opt/minecraft/atm8-2/data:/data",
+          "/opt/minecraft/atm8-2/modpacks:/modpacks",
+          "/opt/minecraft/atm8-2/mods:/mods",
+          "/opt/minecraft/atm8-2/config:/config"
         ]
       }
 
@@ -365,7 +367,7 @@ job "mc-ftb-plexiglass1" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 4
+        cores      = 12
         memory     = 12288  # 12GB
         memory_max = 14336  # 14GB
       }
@@ -422,20 +424,25 @@ job "mc-ftb-plexiglass1" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "Barlow Craft - FTB Plexiglass Mountain1"
+        SERVER_NAME = "Barlow Craft - ATM8-2"
         MODE = "survival"
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
         ENABLE_COMMAND_BLOCK = "TRUE"
-        VIEW_DISTANCE = 10
+        VIEW_DISTANCE = 11
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - FTB Plexiglass Mountain1"
+        SEED = "Barlow Craft - ATM8"
         OPS = "bpexp235"
-        MOTD = "Barlow Craft - FTB Plexiglass Mountain1"
-        TYPE = "FTBA"
-        FTB_MODPACK_ID = 96
-        FTB_MODPACK_VERSION_ID = 2289
+        MOTD = "Barlow Craft - ATM8-2"
+        TYPE = "FORGE"
+        GENERIC_PACK = "/modpacks/atm8.zip"
+        VERSION = "1.19.2"
+        FORGE_VERSION = "43.1.47"
         MAX_MEMORY = "10G"
+        MAX_WORLD_SIZE = 16016
+        MAX_TICK_TIME = -1
+        COPY_CONFIG_DEST= "/data/world/serverconfig"
+        SYNC_SKIP_NEWER_IN_DESTINATION = "false"
       }
     }
   }

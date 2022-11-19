@@ -371,7 +371,7 @@ job "plex" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 12
+        cores      = 8
         memory     = 6144  # 6GB
         memory_max = 7168  # 7GB
       }
