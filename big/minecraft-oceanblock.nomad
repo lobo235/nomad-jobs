@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-atm8" {
+job "mc-ftb-oceanblock1" {
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
@@ -136,7 +136,7 @@ job "mc-atm8" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-atm8" {
+  group "mc-ftb-oceanblock1" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -168,12 +168,12 @@ job "mc-atm8" {
     #
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "atm8", "mc-router-register"]
+      tags     = ["global", "minecraft", "tcp", "ftb_oceanblock", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "atm8.big.netlobo.com"
+        externalServerName = "oceanblock.big.netlobo.com"
       }
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -237,7 +237,7 @@ job "mc-atm8" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 500
+      size = 15000
     }
 
     # The "affinity" stanza enables operators to express placement preferences
@@ -297,7 +297,7 @@ job "mc-atm8" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-atm8" {
+    task "mc-ftb-oceanblock1" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -307,7 +307,7 @@ job "mc-atm8" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "itzg/minecraft-server"
+        image = "itzg/minecraft-server:multiarch"
         ports = ["minecraft"]
 
         # The "auth_soft_fail" configuration instructs Nomad to try public
@@ -315,10 +315,8 @@ job "mc-atm8" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/atm8/data:/data",
-          "/opt/minecraft/atm8/modpacks:/modpacks",
-          "/opt/minecraft/atm8/mods:/mods",
-          "/opt/minecraft/atm8-2/config:/config"
+          "/opt/minecraft/ftb_oceanblock1/data:/data",
+          "/opt/minecraft/ftb_oceanblock1/mods:/mods"
         ]
       }
 
@@ -368,8 +366,8 @@ job "mc-atm8" {
       #
       resources {
         cores      = 8
-        memory     = 24576  # 24GB
-        memory_max = 30720  # 30GB
+        memory     = 12288  # 12GB
+        memory_max = 14336  # 14GB
       }
 
 
@@ -424,25 +422,21 @@ job "mc-atm8" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "Barlow Craft - ATM8"
+        SERVER_NAME = "Barlow Craft - FTB OceanBlock1"
         MODE = "survival"
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
         ENABLE_COMMAND_BLOCK = "TRUE"
-        VIEW_DISTANCE = 6
+        VIEW_DISTANCE = 10
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - ATM8"
+        SEED = "Barlow Craft - FTB OceanBlock1"
         OPS = "bpexp235"
-        MOTD = "Barlow Craft - ATM8"
-        TYPE = "FORGE"
-        GENERIC_PACK = "/modpacks/atm8.zip"
-        VERSION = "1.19.2"
-        FORGE_VERSION = "43.1.55"
-        MAX_MEMORY = "20G"
-        MAX_WORLD_SIZE = 16016
-        MAX_TICK_TIME = -1
-        COPY_CONFIG_DEST= "/data/world/serverconfig"
-        SYNC_SKIP_NEWER_IN_DESTINATION = "false"
+        MOTD = "Barlow Craft - FTB OceanBlock1"
+        TYPE = "FTBA"
+        VERSION = "1.16.5"
+        FTB_MODPACK_ID = 91
+        FTB_MODPACK_VERSION_ID = 2117
+        MAX_MEMORY = "10G"
       }
     }
   }

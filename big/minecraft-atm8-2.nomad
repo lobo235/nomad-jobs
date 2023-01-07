@@ -237,7 +237,7 @@ job "mc-atm8-2" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 15000
+      size = 500
     }
 
     # The "affinity" stanza enables operators to express placement preferences
@@ -318,7 +318,8 @@ job "mc-atm8-2" {
           "/opt/minecraft/atm8-2/data:/data",
           "/opt/minecraft/atm8-2/modpacks:/modpacks",
           "/opt/minecraft/atm8-2/mods:/mods",
-          "/opt/minecraft/atm8-2/config:/config"
+          "/opt/minecraft/atm8-2-2/config:/config",
+          "/opt/minecraft/atm8-2-2/plugins:/plugins"
         ]
       }
 
@@ -367,9 +368,9 @@ job "mc-atm8-2" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 12
-        memory     = 12288  # 12GB
-        memory_max = 14336  # 14GB
+        cores      = 8
+        memory     = 24576  # 24GB
+        memory_max = 30720  # 30GB
       }
 
 
@@ -429,16 +430,16 @@ job "mc-atm8-2" {
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
         ENABLE_COMMAND_BLOCK = "TRUE"
-        VIEW_DISTANCE = 11
+        VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - ATM8"
         OPS = "bpexp235"
         MOTD = "Barlow Craft - ATM8-2"
-        TYPE = "FORGE"
+        TYPE = "SPIGOT"
         GENERIC_PACK = "/modpacks/atm8.zip"
         VERSION = "1.19.2"
-        FORGE_VERSION = "43.1.47"
-        MAX_MEMORY = "10G"
+        FORGE_VERSION = "43.1.55"
+        MAX_MEMORY = "20G"
         MAX_WORLD_SIZE = 16016
         MAX_TICK_TIME = -1
         COPY_CONFIG_DEST= "/data/world/serverconfig"
