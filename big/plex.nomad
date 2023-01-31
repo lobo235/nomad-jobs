@@ -308,7 +308,7 @@ job "plex" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "linuxserver/plex"
+        image = "linuxserver/plex:latest"
         network_mode = "host"
         ports = ["plex"]
         # The "auth_soft_fail" configuration instructs Nomad to try public

@@ -312,7 +312,7 @@ job "sabnzbd" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "linuxserver/sabnzbd"
+        image = "linuxserver/sabnzbd:latest"
         network_mode = "host"
         ports = ["sabnzbd","sabnzbd_tls"]
         # The "auth_soft_fail" configuration instructs Nomad to try public

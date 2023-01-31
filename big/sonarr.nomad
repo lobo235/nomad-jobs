@@ -309,7 +309,7 @@ job "sonarr" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "linuxserver/sonarr"
+        image = "linuxserver/sonarr:latest"
         network_mode = "host"
         ports = ["sonarr"]
         # The "auth_soft_fail" configuration instructs Nomad to try public

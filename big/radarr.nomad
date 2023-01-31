@@ -309,7 +309,7 @@ job "radarr" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "linuxserver/radarr"
+        image = "linuxserver/radarr:latest"
         network_mode = "host"
         ports = ["radarr"]
         # The "auth_soft_fail" configuration instructs Nomad to try public

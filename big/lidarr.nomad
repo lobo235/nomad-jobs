@@ -309,7 +309,7 @@ job "lidarr" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "linuxserver/lidarr"
+        image = "linuxserver/lidarr:latest"
         network_mode = "host"
         ports = ["lidarr"]
         # The "auth_soft_fail" configuration instructs Nomad to try public
