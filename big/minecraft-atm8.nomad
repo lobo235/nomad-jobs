@@ -432,7 +432,7 @@ job "mc-atm8" {
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - ATM8"
-        OPS = "bpexp235"
+        OPS = "netlobo"
         MOTD = "Barlow Craft - ATM8"
         TYPE = "FORGE"
         GENERIC_PACK = "/modpacks/atm8.zip"

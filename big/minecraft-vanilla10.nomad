@@ -427,7 +427,7 @@ job "mc-vanilla10" {
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - Vanilla10"
-        OPS = "bpexp235"
+        OPS = "netlobo"
         MOTD = "Barlow Craft - Vanilla10"
         MAX_MEMORY = "2G"
       }

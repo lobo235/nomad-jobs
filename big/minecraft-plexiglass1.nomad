@@ -430,7 +430,7 @@ job "mc-ftb-plexiglass1" {
         VIEW_DISTANCE = 10
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - FTB Plexiglass Mountain1"
-        OPS = "bpexp235"
+        OPS = "netlobo"
         MOTD = "Barlow Craft - FTB Plexiglass Mountain1"
         TYPE = "FTBA"
         FTB_MODPACK_ID = 96

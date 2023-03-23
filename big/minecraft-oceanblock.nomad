@@ -430,7 +430,7 @@ job "mc-ftb-oceanblock1" {
         VIEW_DISTANCE = 10
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - FTB OceanBlock1"
-        OPS = "bpexp235"
+        OPS = "netlobo"
         MOTD = "Barlow Craft - FTB OceanBlock1"
         TYPE = "FTBA"
         VERSION = "1.16.5"

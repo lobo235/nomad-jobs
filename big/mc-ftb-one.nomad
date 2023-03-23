@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-vanilla11" {
+job "mc-ftb-one1" {
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
@@ -136,7 +136,7 @@ job "mc-vanilla11" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-vanilla11" {
+  group "mc-ftb-one1" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -168,12 +168,12 @@ job "mc-vanilla11" {
     #
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "vanilla11", "mc-router-register"]
+      tags     = ["global", "minecraft", "tcp", "ftb_one", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "vanilla11.big.netlobo.com"
+        externalServerName = "one.big.netlobo.com"
       }
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -187,7 +187,6 @@ job "mc-vanilla11" {
         interval = "30s"
         timeout  = "5s"
       }
-
     }
 
     # The "restart" stanza configures a group's behavior on task failure. If
@@ -297,7 +296,7 @@ job "mc-vanilla11" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-vanilla11" {
+    task "mc-ftb-one1" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -315,7 +314,7 @@ job "mc-vanilla11" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/vanilla11/data:/data"
+          "/opt/minecraft/ftb_one1/data:/data"
         ]
       }
 
@@ -364,9 +363,9 @@ job "mc-vanilla11" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 2
-        memory     = 2560  # 2.5GB
-        memory_max = 3072  # 3GB
+        cores      = 6
+        memory     = 10240 # 10GB
+        memory_max = 12288 # 12GB
       }
 
 
@@ -421,15 +420,19 @@ job "mc-vanilla11" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "Barlow Craft - Vanilla11"
+        SERVER_NAME = "Barlow Craft - FTB One1"
         MODE = "survival"
         DIFFICULTY = "hard"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - Vanilla11"
+        ALLOW_FLIGHT = "TRUE"
+        SEED = "Barlow Craft - FTB One1"
         OPS = "netlobo"
-        MOTD = "Barlow Craft - Vanilla11"
-        MAX_MEMORY = "2G"
+        MOTD = "Barlow Craft - FTB One1"
+        TYPE = "FTBA"
+        FTB_MODPACK_ID = 97
+        FTB_MODPACK_VERSION_ID = 6432
+        MAX_MEMORY = "6G"
       }
     }
   }

@@ -368,9 +368,9 @@ job "mc-atm8-2" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 8
-        memory     = 24576  # 24GB
-        memory_max = 30720  # 30GB
+        cores      = 4
+        memory     = 14576  # 24GB
+        memory_max = 20720  # 30GB
       }
 
 
@@ -433,13 +433,13 @@ job "mc-atm8-2" {
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - ATM8"
-        OPS = "bpexp235"
+        OPS = "netlobo"
         MOTD = "Barlow Craft - ATM8-2"
         TYPE = "SPIGOT"
         GENERIC_PACK = "/modpacks/atm8.zip"
         VERSION = "1.19.2"
         FORGE_VERSION = "43.1.55"
-        MAX_MEMORY = "20G"
+        MAX_MEMORY = "10G"
         MAX_WORLD_SIZE = 16016
         MAX_TICK_TIME = -1
         COPY_CONFIG_DEST= "/data/world/serverconfig"

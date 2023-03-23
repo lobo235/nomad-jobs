@@ -426,7 +426,7 @@ job "mc-ftb-inferno1" {
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - FTB Inferno1"
-        OPS = "bpexp235"
+        OPS = "netlobo"
         MOTD = "Barlow Craft - FTB Inferno1"
         TYPE = "FTBA"
         FTB_MODPACK_ID = 99
