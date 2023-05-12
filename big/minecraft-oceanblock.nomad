@@ -422,7 +422,7 @@ job "mc-ftb-oceanblock1" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "Barlow Craft - FTB OceanBlock1"
+        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aFTB OceanBlock1 §ev1.12.0"
         MODE = "survival"
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
@@ -431,7 +431,7 @@ job "mc-ftb-oceanblock1" {
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - FTB OceanBlock1"
         OPS = "netlobo"
-        MOTD = "Barlow Craft - FTB OceanBlock1"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aFTB OceanBlock1 \u00a7ev1.12.0"
         TYPE = "FTBA"
         VERSION = "1.16.5"
         FTB_MODPACK_ID = 91

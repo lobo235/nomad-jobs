@@ -420,14 +420,14 @@ job "mc-ftb-inferno1" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "Barlow Craft - FTB Inferno1"
+        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aFTB Inferno1 §ev1.3.0"
         MODE = "survival"
         DIFFICULTY = "hard"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - FTB Inferno1"
         OPS = "netlobo"
-        MOTD = "Barlow Craft - FTB Inferno1"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aFTB Inferno1 \u00a7ev1.3.0"
         TYPE = "FTBA"
         FTB_MODPACK_ID = 99
         FTB_MODPACK_VERSION_ID = 2285

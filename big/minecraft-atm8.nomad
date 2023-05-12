@@ -318,7 +318,7 @@ job "mc-atm8" {
           "/opt/minecraft/atm8/data:/data",
           "/opt/minecraft/atm8/modpacks:/modpacks",
           "/opt/minecraft/atm8/mods:/mods",
-          "/opt/minecraft/atm8-2/config:/config"
+          "/opt/minecraft/atm8/config:/config"
         ]
       }
 
@@ -424,7 +424,7 @@ job "mc-atm8" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "Barlow Craft - ATM8"
+        SERVER_NAME = "B§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM8"
         MODE = "survival"
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
@@ -433,7 +433,7 @@ job "mc-atm8" {
         MAX_PLAYERS = 20
         SEED = "Barlow Craft - ATM8"
         OPS = "netlobo"
-        MOTD = "Barlow Craft - ATM8"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM8"
         TYPE = "FORGE"
         GENERIC_PACK = "/modpacks/atm8.zip"
         VERSION = "1.19.2"
