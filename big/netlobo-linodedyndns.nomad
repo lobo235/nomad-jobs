@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-atm9" {
+job "netlobo-linodedyndns" {
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
@@ -66,14 +66,14 @@ job "mc-atm9" {
     # The "min_healthy_time" parameter specifies the minimum time the allocation
     # must be in the healthy state before it is marked as healthy and unblocks
     # further allocations from being updated.
-    min_healthy_time = "30s"
+    min_healthy_time = "10s"
 
     # The "healthy_deadline" parameter specifies the deadline in which the
     # allocation must be marked as healthy after which the allocation is
     # automatically transitioned to unhealthy. Transitioning to unhealthy will
     # fail the deployment and potentially roll back the job if "auto_revert" is
     # set to true.
-    healthy_deadline = "10m"
+    healthy_deadline = "5m"
 
     # The "progress_deadline" parameter specifies the deadline in which an
     # allocation must be marked as healthy. The deadline begins when the first
@@ -81,7 +81,7 @@ job "mc-atm9" {
     # as part of the deployment transitions to a healthy state. If no allocation
     # transitions to the healthy state before the progress deadline, the
     # deployment is marked as failed.
-    progress_deadline = "20m"
+    progress_deadline = "10m"
 
     # The "auto_revert" parameter specifies if the job should auto-revert to the
     # last stable job on deployment failure. A job is marked as stable if all the
@@ -120,12 +120,12 @@ job "mc-atm9" {
     # Specifies the minimum time the allocation must be in the healthy state
     # before it is marked as healthy and unblocks further allocations from being
     # migrated. This is specified using a label suffix like "30s" or "15m".
-    min_healthy_time = "30s"
+    min_healthy_time = "10s"
 
     # Specifies the deadline in which the allocation must be marked as healthy
     # after which the allocation is automatically transitioned to unhealthy. This
     # is specified using a label suffix like "2m" or "1h".
-    healthy_deadline = "10m"
+    healthy_deadline = "5m"
   }
   # The "group" stanza defines a series of tasks that should be co-located on
   # the same Nomad client. Any task within a group will be placed on the same
@@ -136,7 +136,7 @@ job "mc-atm9" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-atm9" {
+  group "netlobo-linodedyndns" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -150,45 +150,6 @@ job "mc-atm9" {
     #
     #     https://www.nomadproject.io/docs/job-specification/network
     #
-    network {
-      port "minecraft" {
-        to = 25565
-      }
-    }
-
-    # The "service" stanza instructs Nomad to register this task as a service
-    # in the service discovery engine, which is currently Nomad or Consul. This
-    # will make the service discoverable after Nomad has placed it on a host and
-    # port.
-    #
-    # For more information and examples on the "service" stanza, please see
-    # the online documentation at:
-    #
-    #     https://www.nomadproject.io/docs/job-specification/service
-    #
-    service {
-      name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "atm9", "mc-router-register"]
-      port     = "minecraft"
-      provider = "consul"
-      meta {
-        mc-router-register = "true"
-        externalServerName = "atm9.big.netlobo.com"
-      }
-
-      # The "check" stanza instructs Nomad to create a Consul health check for
-      # this service. A sample check is provided here for your convenience;
-      # uncomment it to enable it. The "check" stanza is documented in the
-      # "service" stanza documentation.
-
-      check {
-        name     = "alive"
-        type     = "tcp"
-        interval = "30s"
-        timeout  = "5s"
-      }
-
-    }
 
     # The "restart" stanza configures a group's behavior on task failure. If
     # left unspecified, a default restart policy is used based on the job type.
@@ -200,18 +161,18 @@ job "mc-atm9" {
     #
     restart {
       # The number of attempts to run the job within the specified interval.
-      attempts = 2
-      interval = "30m"
+      attempts = 5
+      interval = "5m"
 
       # The "delay" parameter specifies the duration to wait before restarting
       # a task after it has failed.
-      delay = "15s"
+      delay = "30s"
 
       # The "mode" parameter controls what happens when a task has restarted
       # "attempts" times within the interval. "delay" mode delays the next
       # restart until the next interval. "fail" mode does not restart the task
       # if "attempts" has been hit within the interval.
-      mode = "fail"
+      mode = "delay"
     }
 
     # The "ephemeral_disk" stanza instructs Nomad to utilize an ephemeral disk
@@ -297,7 +258,7 @@ job "mc-atm9" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-atm9" {
+    task "netlobo-linodedyndns-pondside" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -307,20 +268,11 @@ job "mc-atm9" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "itzg/minecraft-server"
-        ports = ["minecraft"]
-
+        image = "bpexp235/netlobo-linodedyndns:latest"
         # The "auth_soft_fail" configuration instructs Nomad to try public
         # repositories if the task fails to authenticate when pulling images
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
-        volumes = [
-          "/opt/minecraft/atm9/data:/data",
-          "/opt/minecraft/atm9/modpacks:/modpacks",
-          "/opt/minecraft/atm9/mods:/mods",
-          "/opt/minecraft/atm9/config:/config",
-          "/opt/minecraft/atm9/plugins:/plugins"
-        ]
       }
 
       # The "artifact" stanza instructs Nomad to download an artifact from a
@@ -368,9 +320,9 @@ job "mc-atm9" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 8
-        memory     = 14576  # 24GB
-        memory_max = 20720  # 30GB
+        cpu        = 50 # 50MHz
+        memory     = 10 # 10M
+        memory_max = 16 # 16M
       }
 
 
@@ -422,28 +374,132 @@ job "mc-atm9" {
       # and killing the task. If not set a default is used.
       # kill_timeout = "20s"
       env {
-        EULA = "TRUE"
-        UID = 1001
-        GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 v0.0.50"
-        MODE = "survival"
-        DIFFICULTY = "hard"
-        ALLOW_FLIGHT = "TRUE"
-        ENABLE_COMMAND_BLOCK = "TRUE"
-        VIEW_DISTANCE = 6
-        MAX_PLAYERS = 20
-        SEED = "Barlow Craft - ATM9"
-        OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM9 v0.0.50"
-        TYPE = "FORGE"
-        GENERIC_PACK = "/modpacks/Server-Files-0.0.50.zip"
-        VERSION = "1.20.1"
-        FORGE_VERSION = "47.1.3"
-        MAX_MEMORY = "10G"
-        MAX_WORLD_SIZE = 16016
-        MAX_TICK_TIME = -1
-        COPY_CONFIG_DEST= "/data/world/serverconfig"
-        SYNC_SKIP_NEWER_IN_DESTINATION = "false"
+        LINODE_API_KEY = "77f3687767f00eeab745c9e69a9f0733889f8db5ba9d4a517367d9e34f134541"
+        DOMAIN_ID = 1556502
+        RESOURCE_ID = 30738485
+        NAME = "pondside"
+      }
+    }
+    task "netlobo-linodedyndns-ns1.big" {
+      # The "driver" parameter specifies the task driver that should be used to
+      # run the task.
+      driver = "docker"
+
+      # The "config" stanza specifies the driver configuration, which is passed
+      # directly to the driver to start the task. The details of configurations
+      # are specific to each driver, so please see specific driver
+      # documentation for more information.
+      config {
+        image = "bpexp235/netlobo-linodedyndns:latest"
+        # The "auth_soft_fail" configuration instructs Nomad to try public
+        # repositories if the task fails to authenticate when pulling images
+        # and the Docker driver has an "auth" configuration block.
+        auth_soft_fail = true
+      }
+
+      # The "artifact" stanza instructs Nomad to download an artifact from a
+      # remote source prior to starting the task. This provides a convenient
+      # mechanism for downloading configuration files or data needed to run the
+      # task. It is possible to specify the "artifact" stanza multiple times to
+      # download multiple artifacts.
+      #
+      # For more information and examples on the "artifact" stanza, please see
+      # the online documentation at:
+      #
+      #     https://www.nomadproject.io/docs/job-specification/artifact
+      #
+      # artifact {
+      #   source = "http://foo.com/artifact.tar.gz"
+      #   options {
+      #     checksum = "md5:c4aa853ad2215426eb7d70a21922e794"
+      #   }
+      # }
+
+
+      # The "logs" stanza instructs the Nomad client on how many log files and
+      # the maximum size of those logs files to retain. Logging is enabled by
+      # default, but the "logs" stanza allows for finer-grained control over
+      # the log rotation and storage configuration.
+      #
+      # For more information and examples on the "logs" stanza, please see
+      # the online documentation at:
+      #
+      #     https://www.nomadproject.io/docs/job-specification/logs
+      #
+      # logs {
+      #   max_files     = 10
+      #   max_file_size = 15
+      # }
+
+      # The "resources" stanza describes the requirements a task needs to
+      # execute. Resource requirements include memory, cpu, and more.
+      # This ensures the task will execute on a machine that contains enough
+      # resource capacity.
+      #
+      # For more information and examples on the "resources" stanza, please see
+      # the online documentation at:
+      #
+      #     https://www.nomadproject.io/docs/job-specification/resources
+      #
+      resources {
+        cpu        = 50 # 50MHz
+        memory     = 10 # 10M
+        memory_max = 16 # 16M
+      }
+
+
+      # The "template" stanza instructs Nomad to manage a template, such as
+      # a configuration file or script. This template can optionally pull data
+      # from Consul or Vault to populate runtime configuration data.
+      #
+      # For more information and examples on the "template" stanza, please see
+      # the online documentation at:
+      #
+      #     https://www.nomadproject.io/docs/job-specification/template
+      #
+      # template {
+      #   data          = "---\nkey: {{ key \"service/my-key\" }}"
+      #   destination   = "local/file.yml"
+      #   change_mode   = "signal"
+      #   change_signal = "SIGHUP"
+      # }
+
+      # The "template" stanza can also be used to create environment variables
+      # for tasks that prefer those to config files. The task will be restarted
+      # when data pulled from Consul or Vault changes.
+      #
+      # template {
+      #   data        = "KEY={{ key \"service/my-key\" }}"
+      #   destination = "local/file.env"
+      #   env         = true
+      # }
+
+      # The "vault" stanza instructs the Nomad client to acquire a token from
+      # a HashiCorp Vault server. The Nomad servers must be configured and
+      # authorized to communicate with Vault. By default, Nomad will inject
+      # The token into the job via an environment variable and make the token
+      # available to the "template" stanza. The Nomad client handles the renewal
+      # and revocation of the Vault token.
+      #
+      # For more information and examples on the "vault" stanza, please see
+      # the online documentation at:
+      #
+      #     https://www.nomadproject.io/docs/job-specification/vault
+      #
+      # vault {
+      #   policies      = ["cdn", "frontend"]
+      #   change_mode   = "signal"
+      #   change_signal = "SIGHUP"
+      # }
+
+      # Controls the timeout between signalling a task it will be killed
+      # and killing the task. If not set a default is used.
+      # kill_timeout = "20s"
+      env {
+        LINODE_API_KEY = "77f3687767f00eeab745c9e69a9f0733889f8db5ba9d4a517367d9e34f134541"
+        DOMAIN_ID = 1556502
+        RESOURCE_ID = 22082897
+        NAME = "ns1.big"
       }
     }
   }

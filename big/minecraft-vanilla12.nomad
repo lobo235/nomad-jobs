@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-atm9" {
+job "mc-vanilla12" {
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
@@ -136,7 +136,7 @@ job "mc-atm9" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-atm9" {
+  group "mc-vanilla12" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -168,12 +168,12 @@ job "mc-atm9" {
     #
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "atm9", "mc-router-register"]
+      tags     = ["global", "minecraft", "tcp", "vanilla12", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "atm9.big.netlobo.com"
+        externalServerName = "vanilla12.big.netlobo.com"
       }
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -237,7 +237,7 @@ job "mc-atm9" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 500
+      size = 5000
     }
 
     # The "affinity" stanza enables operators to express placement preferences
@@ -297,7 +297,7 @@ job "mc-atm9" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-atm9" {
+    task "mc-vanilla12" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -315,11 +315,7 @@ job "mc-atm9" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/atm9/data:/data",
-          "/opt/minecraft/atm9/modpacks:/modpacks",
-          "/opt/minecraft/atm9/mods:/mods",
-          "/opt/minecraft/atm9/config:/config",
-          "/opt/minecraft/atm9/plugins:/plugins"
+          "/opt/minecraft/vanilla12/data:/data"
         ]
       }
 
@@ -368,9 +364,9 @@ job "mc-atm9" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 8
-        memory     = 14576  # 24GB
-        memory_max = 20720  # 30GB
+        cores      = 2
+        memory     = 2560  # 2.5GB
+        memory_max = 3072  # 3GB
       }
 
 
@@ -425,25 +421,15 @@ job "mc-atm9" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 v0.0.50"
+        SERVER_NAME = "Barlow Craft - Vanilla12"
         MODE = "survival"
         DIFFICULTY = "hard"
-        ALLOW_FLIGHT = "TRUE"
-        ENABLE_COMMAND_BLOCK = "TRUE"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - ATM9"
+        SEED = "Barlow Craft - Vanilla12"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM9 v0.0.50"
-        TYPE = "FORGE"
-        GENERIC_PACK = "/modpacks/Server-Files-0.0.50.zip"
-        VERSION = "1.20.1"
-        FORGE_VERSION = "47.1.3"
-        MAX_MEMORY = "10G"
-        MAX_WORLD_SIZE = 16016
-        MAX_TICK_TIME = -1
-        COPY_CONFIG_DEST= "/data/world/serverconfig"
-        SYNC_SKIP_NEWER_IN_DESTINATION = "false"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aVanilla12"
+        MAX_MEMORY = "2G"
       }
     }
   }
