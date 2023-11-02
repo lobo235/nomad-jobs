@@ -11,14 +11,15 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-bedrock1" {
+job "mc-vanilla11" {
+  node_pool = "beast"
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
   #
   # The "datacenters" parameter specifies the list of datacenters which should
   # be considered when placing this task. This must be provided.
-  datacenters = ["dc1"]
+  datacenters = ["pondside"]
 
   # The "type" parameter controls the type of job, which impacts the scheduler's
   # decision on placement. This configuration is optional and defaults to
@@ -136,7 +137,7 @@ job "mc-bedrock1" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-bedrock1" {
+  group "mc-vanilla11" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -152,7 +153,7 @@ job "mc-bedrock1" {
     #
     network {
       port "minecraft" {
-        static = 19132
+        to = 25565
       }
     }
 
@@ -168,12 +169,12 @@ job "mc-bedrock1" {
     #
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "bedrock1", "mc-router-register"]
+      tags     = ["global", "minecraft", "tcp", "vanilla11", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "bedrock1.big.netlobo.com"
+        externalServerName = "vanilla11.big.netlobo.com"
       }
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -181,6 +182,12 @@ job "mc-bedrock1" {
       # uncomment it to enable it. The "check" stanza is documented in the
       # "service" stanza documentation.
 
+      check {
+        name     = "alive"
+        type     = "tcp"
+        interval = "30s"
+        timeout  = "5s"
+      }
 
     }
 
@@ -291,7 +298,7 @@ job "mc-bedrock1" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-bedrock1" {
+    task "mc-vanilla11" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -301,7 +308,7 @@ job "mc-bedrock1" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "itzg/minecraft-bedrock-server"
+        image = "itzg/minecraft-server"
         ports = ["minecraft"]
 
         # The "auth_soft_fail" configuration instructs Nomad to try public
@@ -309,7 +316,7 @@ job "mc-bedrock1" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/bedrock1/data:/data"
+          "/mnt/fast/minecraft/vanilla11/data:/data"
         ]
       }
 
@@ -358,7 +365,7 @@ job "mc-bedrock1" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 2
+        cores      = 3
         memory     = 2560  # 2.5GB
         memory_max = 3072  # 3GB
       }
@@ -415,16 +422,15 @@ job "mc-bedrock1" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aBedrock1"
+        SERVER_NAME = "Barlow Craft - Vanilla11"
         MODE = "survival"
         DIFFICULTY = "hard"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - Bedrock1"
+        SEED = "Barlow Craft - Vanilla11"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aBedrock1"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aVanilla11"
         MAX_MEMORY = "2G"
-        VERSION = "LATEST"
       }
     }
   }

@@ -11,14 +11,15 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-ftb-skies1" {
+job "sonarr" {
+  node_pool = "beast"
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
   #
   # The "datacenters" parameter specifies the list of datacenters which should
   # be considered when placing this task. This must be provided.
-  datacenters = ["dc1"]
+  datacenters = ["pondside"]
 
   # The "type" parameter controls the type of job, which impacts the scheduler's
   # decision on placement. This configuration is optional and defaults to
@@ -66,14 +67,14 @@ job "mc-ftb-skies1" {
     # The "min_healthy_time" parameter specifies the minimum time the allocation
     # must be in the healthy state before it is marked as healthy and unblocks
     # further allocations from being updated.
-    min_healthy_time = "30s"
+    min_healthy_time = "10s"
 
     # The "healthy_deadline" parameter specifies the deadline in which the
     # allocation must be marked as healthy after which the allocation is
     # automatically transitioned to unhealthy. Transitioning to unhealthy will
     # fail the deployment and potentially roll back the job if "auto_revert" is
     # set to true.
-    healthy_deadline = "10m"
+    healthy_deadline = "5m"
 
     # The "progress_deadline" parameter specifies the deadline in which an
     # allocation must be marked as healthy. The deadline begins when the first
@@ -81,7 +82,7 @@ job "mc-ftb-skies1" {
     # as part of the deployment transitions to a healthy state. If no allocation
     # transitions to the healthy state before the progress deadline, the
     # deployment is marked as failed.
-    progress_deadline = "20m"
+    progress_deadline = "10m"
 
     # The "auto_revert" parameter specifies if the job should auto-revert to the
     # last stable job on deployment failure. A job is marked as stable if all the
@@ -120,12 +121,12 @@ job "mc-ftb-skies1" {
     # Specifies the minimum time the allocation must be in the healthy state
     # before it is marked as healthy and unblocks further allocations from being
     # migrated. This is specified using a label suffix like "30s" or "15m".
-    min_healthy_time = "30s"
+    min_healthy_time = "10s"
 
     # Specifies the deadline in which the allocation must be marked as healthy
     # after which the allocation is automatically transitioned to unhealthy. This
     # is specified using a label suffix like "2m" or "1h".
-    healthy_deadline = "10m"
+    healthy_deadline = "5m"
   }
   # The "group" stanza defines a series of tasks that should be co-located on
   # the same Nomad client. Any task within a group will be placed on the same
@@ -136,7 +137,7 @@ job "mc-ftb-skies1" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-ftb-skies1" {
+  group "sonarr" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -151,9 +152,10 @@ job "mc-ftb-skies1" {
     #     https://www.nomadproject.io/docs/job-specification/network
     #
     network {
-      port "minecraft" {
-        to = 25565
+      port "sonarr" {
+        static = 8989
       }
+      mode = "host"
     }
 
     # The "service" stanza instructs Nomad to register this task as a service
@@ -167,26 +169,33 @@ job "mc-ftb-skies1" {
     #     https://www.nomadproject.io/docs/job-specification/service
     #
     service {
-      name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "ftb_skies", "mc-router-register"]
-      port     = "minecraft"
+      name     = "sonarr"
+      port     = "sonarr"
       provider = "consul"
-      meta {
-        mc-router-register = "true"
-        externalServerName = "skies.big.netlobo.com"
-      }
+      tags     = [
+        "traefik.enable=true",
+        "traefik.http.routers.sonarr.rule=Host(`sonarr.big.netlobo.com`)",
+        "traefik.http.routers.sonarr.entrypoints=websecure",
+        "traefik.http.routers.sonarr.tls=true"
+      ]
 
       # The "check" stanza instructs Nomad to create a Consul health check for
       # this service. A sample check is provided here for your convenience;
       # uncomment it to enable it. The "check" stanza is documented in the
       # "service" stanza documentation.
-
       check {
-        name     = "alive"
-        type     = "tcp"
+        type = "http"
+        path = "/system/status"
+        port = "sonarr"
         interval = "30s"
-        timeout  = "5s"
+        timeout = "20s"
+
+        check_restart {
+          limit = 3
+          grace = "2m"
+        }
       }
+
     }
 
     # The "restart" stanza configures a group's behavior on task failure. If
@@ -199,18 +208,18 @@ job "mc-ftb-skies1" {
     #
     restart {
       # The number of attempts to run the job within the specified interval.
-      attempts = 2
-      interval = "30m"
+      attempts = 5
+      interval = "5m"
 
       # The "delay" parameter specifies the duration to wait before restarting
       # a task after it has failed.
-      delay = "15s"
+      delay = "30s"
 
       # The "mode" parameter controls what happens when a task has restarted
       # "attempts" times within the interval. "delay" mode delays the next
       # restart until the next interval. "fail" mode does not restart the task
       # if "attempts" has been hit within the interval.
-      mode = "fail"
+      mode = "delay"
     }
 
     # The "ephemeral_disk" stanza instructs Nomad to utilize an ephemeral disk
@@ -236,7 +245,7 @@ job "mc-ftb-skies1" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 5000
+      size = 300
     }
 
     # The "affinity" stanza enables operators to express placement preferences
@@ -296,7 +305,7 @@ job "mc-ftb-skies1" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-ftb-skies1" {
+    task "sonarr" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -306,16 +315,21 @@ job "mc-ftb-skies1" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "itzg/minecraft-server"
-        ports = ["minecraft"]
-
+        image = "linuxserver/sonarr:latest"
+        network_mode = "host"
+        ports = ["sonarr"]
         # The "auth_soft_fail" configuration instructs Nomad to try public
         # repositories if the task fails to authenticate when pulling images
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/ftb_skies1/data:/data",
-          "/opt/minecraft/ftb_skies1/config:/config"
+          "/mnt/fast/sonarr/config:/config",
+          "/mnt/media/downloads:/downloads",
+          "/mnt/media/tv:/tv",
+          "/mnt/media/tv-hidden:/tv-hidden",
+          "/mnt/media2/downloads:/downloads2",
+          "/mnt/media2/tv:/tv2",
+          "/mnt/media2/tv-hidden:/tv2-hidden"
         ]
       }
 
@@ -364,9 +378,9 @@ job "mc-ftb-skies1" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 6
-        memory     = 10240 # 10GB
-        memory_max = 12288 # 12GB
+        cores      = 4
+        memory     = 8192   # 8GB
+        memory_max = 10240  # 10GB
       }
 
 
@@ -418,25 +432,10 @@ job "mc-ftb-skies1" {
       # and killing the task. If not set a default is used.
       # kill_timeout = "20s"
       env {
-        EULA = "TRUE"
-        UID = 1001
-        GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aFTB Skies §ev1.0.9"
-        MODE = "survival"
-        DIFFICULTY = "hard"
-        VIEW_DISTANCE = 6
-        MAX_PLAYERS = 20
-        ALLOW_FLIGHT = "TRUE"
-        SEED = "Barlow Craft - FTB Skies1"
-        OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aFTB Skies \u00a7ev1.0.9"
-        TYPE = "FTBA"
-        FTB_MODPACK_ID = 103
-        FTB_MODPACK_VERSION_ID = 6478
-        MAX_MEMORY = "8G"
-        MAX_TICK_TIME = -1
-        COPY_CONFIG_DEST= "/data/world/serverconfig"
-        SYNC_SKIP_NEWER_IN_DESTINATION = "false"
+        PUID = 1002
+        PGID = 1002
+        TZ = "America/Denver"
+        UMASK = "022"
       }
     }
   }

@@ -11,14 +11,15 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-router" {
+job "radarr" {
+  node_pool = "beast"
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
   #
   # The "datacenters" parameter specifies the list of datacenters which should
   # be considered when placing this task. This must be provided.
-  datacenters = ["dc1"]
+  datacenters = ["pondside"]
 
   # The "type" parameter controls the type of job, which impacts the scheduler's
   # decision on placement. This configuration is optional and defaults to
@@ -136,7 +137,7 @@ job "mc-router" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-router" {
+  group "radarr" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -151,12 +152,10 @@ job "mc-router" {
     #     https://www.nomadproject.io/docs/job-specification/network
     #
     network {
-      port "minecraft" {
-        static = 25565
+      port "radarr" {
+        static = 7878
       }
-      port "api" {
-        static = 7069
-      }
+      mode = "host"
     }
 
     # The "service" stanza instructs Nomad to register this task as a service
@@ -170,35 +169,32 @@ job "mc-router" {
     #     https://www.nomadproject.io/docs/job-specification/service
     #
     service {
-      name     = "mc-router"
-      tags     = ["global", "minecraft", "tcp"]
-      port     = "minecraft"
+      name     = "radarr"
+      port     = "radarr"
       provider = "consul"
+      tags     = [
+        "traefik.enable=true",
+        "traefik.http.routers.radarr.rule=Host(`radarr.big.netlobo.com`)",
+        "traefik.http.routers.radarr.entrypoints=websecure",
+        "traefik.http.routers.radarr.tls=true"
+      ]
 
       # The "check" stanza instructs Nomad to create a Consul health check for
       # this service. A sample check is provided here for your convenience;
       # uncomment it to enable it. The "check" stanza is documented in the
       # "service" stanza documentation.
-
       check {
-        name     = "alive"
-        type     = "tcp"
-        port     = "minecraft"
-        interval = "10s"
-        timeout  = "2s"
+        type = "http"
+        path = "/system/status"
+        port = "radarr"
+        interval = "30s"
+        timeout = "20s"
+
+        check_restart {
+          limit = 3
+          grace = "2m"
+        }
       }
-    }
-
-    service {
-      name     = "mc-router-api"
-      tags     = ["global", "tcp"]
-      port     = "api"
-      provider = "consul"
-
-      # The "check" stanza instructs Nomad to create a Consul health check for
-      # this service. A sample check is provided here for your convenience;
-      # uncomment it to enable it. The "check" stanza is documented in the
-      # "service" stanza documentation.
 
     }
 
@@ -212,12 +208,12 @@ job "mc-router" {
     #
     restart {
       # The number of attempts to run the job within the specified interval.
-      attempts = 2
-      interval = "30m"
+      attempts = 5
+      interval = "5m"
 
       # The "delay" parameter specifies the duration to wait before restarting
       # a task after it has failed.
-      delay = "15s"
+      delay = "30s"
 
       # The "mode" parameter controls what happens when a task has restarted
       # "attempts" times within the interval. "delay" mode delays the next
@@ -236,7 +232,7 @@ job "mc-router" {
     #
     #     https://www.nomadproject.io/docs/job-specification/ephemeral_disk
     #
-    # ephemeral_disk {
+    ephemeral_disk {
       # When sticky is true and the task group is updated, the scheduler
       # will prefer to place the updated allocation on the same node and
       # will migrate the data. This is useful for tasks that store data
@@ -249,8 +245,8 @@ job "mc-router" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      # size = 250
-    # }
+      size = 300
+    }
 
     # The "affinity" stanza enables operators to express placement preferences
     # based on node attributes or metadata.
@@ -309,7 +305,7 @@ job "mc-router" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-router" {
+    task "radarr" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -319,15 +315,21 @@ job "mc-router" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "itzg/mc-router"
-        ports = ["minecraft"]
-
+        image = "linuxserver/radarr:latest"
+        network_mode = "host"
+        ports = ["radarr"]
         # The "auth_soft_fail" configuration instructs Nomad to try public
         # repositories if the task fails to authenticate when pulling images
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/mc-router/:/configs"
+          "/mnt/fast/radarr/config:/config",
+          "/mnt/media/downloads:/downloads",
+          "/mnt/media/movies:/movies",
+          "/mnt/media/movies-hidden:/movies-hidden",
+          "/mnt/media2/downloads:/downloads2",
+          "/mnt/media2/movies:/movies2",
+          "/mnt/media2/movies-hidden:/movies2-hidden"
         ]
       }
 
@@ -376,9 +378,9 @@ job "mc-router" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cpu        = 2000  # 2000Mhz
-        memory     = 128 # 128MB
-        memory_max = 256 # 256MB
+        cores      = 4
+        memory     = 8192   # 8GB
+        memory_max = 10240  # 10GB
       }
 
 
@@ -402,13 +404,11 @@ job "mc-router" {
       # for tasks that prefer those to config files. The task will be restarted
       # when data pulled from Consul or Vault changes.
       #
-      template {
-        data        = <<EOF
-MAPPING={{ $first := true }}{{- range service "mc-router-register.minecraft" }}{{ if $first }}{{ $first = false }}{{ else }},{{ end }}{{ .ServiceMeta.externalServerName }}={{ .Address }}:{{ .Port }}{{ end -}}
-EOF
-        destination = "local/mapping.env"
-        env         = true
-      }
+      # template {
+      #   data        = "KEY={{ key \"service/my-key\" }}"
+      #   destination = "local/file.env"
+      #   env         = true
+      # }
 
       # The "vault" stanza instructs the Nomad client to acquire a token from
       # a HashiCorp Vault server. The Nomad servers must be configured and
@@ -432,7 +432,10 @@ EOF
       # and killing the task. If not set a default is used.
       # kill_timeout = "20s"
       env {
-        API_BINDING = ":${NOMAD_PORT_api}"
+        PUID = 1002
+        PGID = 1002
+        TZ = "America/Denver"
+        UMASK = "022"
       }
     }
   }

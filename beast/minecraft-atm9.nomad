@@ -12,13 +12,14 @@
 #     https://www.nomadproject.io/docs/job-specification/job
 #
 job "mc-atm9" {
+  node_pool = "beast"
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
   #
   # The "datacenters" parameter specifies the list of datacenters which should
   # be considered when placing this task. This must be provided.
-  datacenters = ["dc1"]
+  datacenters = ["pondside"]
 
   # The "type" parameter controls the type of job, which impacts the scheduler's
   # decision on placement. This configuration is optional and defaults to
@@ -237,7 +238,7 @@ job "mc-atm9" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 500
+      size = 300
     }
 
     # The "affinity" stanza enables operators to express placement preferences
@@ -315,11 +316,11 @@ job "mc-atm9" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/atm9/data:/data",
-          "/opt/minecraft/atm9/modpacks:/modpacks",
-          "/opt/minecraft/atm9/mods:/mods",
-          "/opt/minecraft/atm9/config:/config",
-          "/opt/minecraft/atm9/plugins:/plugins"
+          "/mnt/fast/minecraft/atm9/data:/data",
+          "/mnt/fast/minecraft/atm9/modpacks:/modpacks",
+          "/mnt/fast/minecraft/atm9/mods:/mods",
+          "/mnt/fast/minecraft/atm9/config:/config",
+          "/mnt/fast/minecraft/atm9/plugins:/plugins"
         ]
       }
 
@@ -368,9 +369,9 @@ job "mc-atm9" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 8
-        memory     = 14576  # 24GB
-        memory_max = 20720  # 30GB
+        cores      = 12
+        memory     = 14576  # 14GB
+        memory_max = 20720  # 20GB
       }
 
 
@@ -425,18 +426,18 @@ job "mc-atm9" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 v0.0.50"
+        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 v0.2.4"
         MODE = "survival"
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
         ENABLE_COMMAND_BLOCK = "TRUE"
         VIEW_DISTANCE = 6
-        MAX_PLAYERS = 20
+        MAX_PLAYERS = 40
         SEED = "Barlow Craft - ATM9"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM9 v0.0.50"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM9 v0.2.4"
         TYPE = "FORGE"
-        GENERIC_PACK = "/modpacks/Server-Files-0.0.50.zip"
+        GENERIC_PACK = "/modpacks/Server-Files-0.2.4.zip"
         VERSION = "1.20.1"
         FORGE_VERSION = "47.1.3"
         MAX_MEMORY = "10G"

@@ -11,14 +11,14 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-ftb-one1" {
+job "mc-ftb-plexiglass1" {
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
   #
   # The "datacenters" parameter specifies the list of datacenters which should
   # be considered when placing this task. This must be provided.
-  datacenters = ["dc1"]
+  datacenters = ["pondside"]
 
   # The "type" parameter controls the type of job, which impacts the scheduler's
   # decision on placement. This configuration is optional and defaults to
@@ -136,7 +136,7 @@ job "mc-ftb-one1" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-ftb-one1" {
+  group "mc-ftb-plexiglass1" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -168,12 +168,12 @@ job "mc-ftb-one1" {
     #
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "ftb_one", "mc-router-register"]
+      tags     = ["global", "minecraft", "tcp", "ftb_plexiglass", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "one.big.netlobo.com"
+        externalServerName = "plexiglass.big.netlobo.com"
       }
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -187,6 +187,7 @@ job "mc-ftb-one1" {
         interval = "30s"
         timeout  = "5s"
       }
+
     }
 
     # The "restart" stanza configures a group's behavior on task failure. If
@@ -236,7 +237,7 @@ job "mc-ftb-one1" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 5000
+      size = 15000
     }
 
     # The "affinity" stanza enables operators to express placement preferences
@@ -296,7 +297,7 @@ job "mc-ftb-one1" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-ftb-one1" {
+    task "mc-ftb-plexiglass1" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -314,7 +315,8 @@ job "mc-ftb-one1" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/ftb_one1/data:/data"
+          "/opt/minecraft/ftb_plexiglass1/data:/data",
+          "/opt/minecraft/ftb_plexiglass1/mods:/mods"
         ]
       }
 
@@ -363,9 +365,9 @@ job "mc-ftb-one1" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 6
-        memory     = 10240 # 10GB
-        memory_max = 12288 # 12GB
+        cores      = 4
+        memory     = 12288  # 12GB
+        memory_max = 14336  # 14GB
       }
 
 
@@ -420,19 +422,20 @@ job "mc-ftb-one1" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aFTB One1 §ev2.2.0"
+        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aFTB Plexiglass Mountain1 §ev1.2.3"
         MODE = "survival"
         DIFFICULTY = "hard"
-        VIEW_DISTANCE = 6
-        MAX_PLAYERS = 20
         ALLOW_FLIGHT = "TRUE"
-        SEED = "Barlow Craft - FTB One1"
+        ENABLE_COMMAND_BLOCK = "TRUE"
+        VIEW_DISTANCE = 10
+        MAX_PLAYERS = 20
+        SEED = "Barlow Craft - FTB Plexiglass Mountain1"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aFTB One1 \u00a7ev2.2.0"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aFTB Plexiglass Mountain1 \u00a7ev1.2.3"
         TYPE = "FTBA"
-        FTB_MODPACK_ID = 97
-        FTB_MODPACK_VERSION_ID = 6432
-        MAX_MEMORY = "6G"
+        FTB_MODPACK_ID = 96
+        FTB_MODPACK_VERSION_ID = 2289
+        MAX_MEMORY = "10G"
       }
     }
   }

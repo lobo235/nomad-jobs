@@ -11,14 +11,15 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-atm8-2" {
+job "mc-vanilla10" {
+  node_pool = "beast"
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
   #
   # The "datacenters" parameter specifies the list of datacenters which should
   # be considered when placing this task. This must be provided.
-  datacenters = ["dc1"]
+  datacenters = ["pondside"]
 
   # The "type" parameter controls the type of job, which impacts the scheduler's
   # decision on placement. This configuration is optional and defaults to
@@ -136,7 +137,7 @@ job "mc-atm8-2" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-atm8-2" {
+  group "mc-vanilla10" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -168,12 +169,12 @@ job "mc-atm8-2" {
     #
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "atm8-2", "mc-router-register"]
+      tags     = ["global", "minecraft", "tcp", "vanilla10", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "atm8-2.big.netlobo.com"
+        externalServerName = "vanilla10.big.netlobo.com"
       }
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -237,7 +238,7 @@ job "mc-atm8-2" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 500
+      size = 5000
     }
 
     # The "affinity" stanza enables operators to express placement preferences
@@ -297,7 +298,7 @@ job "mc-atm8-2" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-atm8-2" {
+    task "mc-vanilla10" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -315,11 +316,7 @@ job "mc-atm8-2" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/atm8-2/data:/data",
-          "/opt/minecraft/atm8-2/modpacks:/modpacks",
-          "/opt/minecraft/atm8-2/mods:/mods",
-          "/opt/minecraft/atm8-2/config:/config",
-          "/opt/minecraft/atm8-2/plugins:/plugins"
+          "/mnt/fast/minecraft/vanilla10/data:/data"
         ]
       }
 
@@ -368,9 +365,9 @@ job "mc-atm8-2" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 4
-        memory     = 14576  # 24GB
-        memory_max = 20720  # 30GB
+        cores      = 3
+        memory     = 2560  # 2.5GB
+        memory_max = 3072  # 3GB
       }
 
 
@@ -425,25 +422,15 @@ job "mc-atm8-2" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM8-2"
+        SERVER_NAME = "Barlow Craft - Vanilla10"
         MODE = "survival"
         DIFFICULTY = "hard"
-        ALLOW_FLIGHT = "TRUE"
-        ENABLE_COMMAND_BLOCK = "TRUE"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - ATM8"
+        SEED = "Barlow Craft - Vanilla10"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM8-2"
-        TYPE = "SPIGOT"
-        GENERIC_PACK = "/modpacks/atm8.zip"
-        VERSION = "1.19.2"
-        FORGE_VERSION = "43.1.55"
-        MAX_MEMORY = "10G"
-        MAX_WORLD_SIZE = 16016
-        MAX_TICK_TIME = -1
-        COPY_CONFIG_DEST= "/data/world/serverconfig"
-        SYNC_SKIP_NEWER_IN_DESTINATION = "false"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aVanilla10"
+        MAX_MEMORY = "2G"
       }
     }
   }

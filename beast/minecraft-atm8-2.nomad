@@ -11,14 +11,14 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-ftb-inferno1" {
+job "mc-atm8-2" {
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
   #
   # The "datacenters" parameter specifies the list of datacenters which should
   # be considered when placing this task. This must be provided.
-  datacenters = ["dc1"]
+  datacenters = ["pondside"]
 
   # The "type" parameter controls the type of job, which impacts the scheduler's
   # decision on placement. This configuration is optional and defaults to
@@ -136,7 +136,7 @@ job "mc-ftb-inferno1" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-ftb-inferno1" {
+  group "mc-atm8-2" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -168,12 +168,12 @@ job "mc-ftb-inferno1" {
     #
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "ftb_inferno", "mc-router-register"]
+      tags     = ["global", "minecraft", "tcp", "atm8-2", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "inferno.big.netlobo.com"
+        externalServerName = "atm8-2.big.netlobo.com"
       }
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -187,6 +187,7 @@ job "mc-ftb-inferno1" {
         interval = "30s"
         timeout  = "5s"
       }
+
     }
 
     # The "restart" stanza configures a group's behavior on task failure. If
@@ -236,7 +237,7 @@ job "mc-ftb-inferno1" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 5000
+      size = 500
     }
 
     # The "affinity" stanza enables operators to express placement preferences
@@ -296,7 +297,7 @@ job "mc-ftb-inferno1" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-ftb-inferno1" {
+    task "mc-atm8-2" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -314,7 +315,11 @@ job "mc-ftb-inferno1" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/ftb_inferno1/data:/data"
+          "/opt/minecraft/atm8-2/data:/data",
+          "/opt/minecraft/atm8-2/modpacks:/modpacks",
+          "/opt/minecraft/atm8-2/mods:/mods",
+          "/opt/minecraft/atm8-2/config:/config",
+          "/opt/minecraft/atm8-2/plugins:/plugins"
         ]
       }
 
@@ -364,8 +369,8 @@ job "mc-ftb-inferno1" {
       #
       resources {
         cores      = 4
-        memory     = 5120 # 5GB
-        memory_max = 6144 # 6GB
+        memory     = 14576  # 24GB
+        memory_max = 20720  # 30GB
       }
 
 
@@ -420,18 +425,25 @@ job "mc-ftb-inferno1" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aFTB Inferno1 §ev1.3.0"
+        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM8-2"
         MODE = "survival"
         DIFFICULTY = "hard"
+        ALLOW_FLIGHT = "TRUE"
+        ENABLE_COMMAND_BLOCK = "TRUE"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - FTB Inferno1"
+        SEED = "Barlow Craft - ATM8"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aFTB Inferno1 \u00a7ev1.3.0"
-        TYPE = "FTBA"
-        FTB_MODPACK_ID = 99
-        FTB_MODPACK_VERSION_ID = 2285
-        MAX_MEMORY = "4G"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM8-2"
+        TYPE = "SPIGOT"
+        GENERIC_PACK = "/modpacks/atm8.zip"
+        VERSION = "1.19.2"
+        FORGE_VERSION = "43.1.55"
+        MAX_MEMORY = "10G"
+        MAX_WORLD_SIZE = 16016
+        MAX_TICK_TIME = -1
+        COPY_CONFIG_DEST= "/data/world/serverconfig"
+        SYNC_SKIP_NEWER_IN_DESTINATION = "false"
       }
     }
   }

@@ -11,14 +11,15 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-ftb-skyadventures1" {
+job "mc-router" {
+  node_pool = "beast"
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
   #
   # The "datacenters" parameter specifies the list of datacenters which should
   # be considered when placing this task. This must be provided.
-  datacenters = ["dc1"]
+  datacenters = ["pondside"]
 
   # The "type" parameter controls the type of job, which impacts the scheduler's
   # decision on placement. This configuration is optional and defaults to
@@ -66,14 +67,14 @@ job "mc-ftb-skyadventures1" {
     # The "min_healthy_time" parameter specifies the minimum time the allocation
     # must be in the healthy state before it is marked as healthy and unblocks
     # further allocations from being updated.
-    min_healthy_time = "30s"
+    min_healthy_time = "10s"
 
     # The "healthy_deadline" parameter specifies the deadline in which the
     # allocation must be marked as healthy after which the allocation is
     # automatically transitioned to unhealthy. Transitioning to unhealthy will
     # fail the deployment and potentially roll back the job if "auto_revert" is
     # set to true.
-    healthy_deadline = "10m"
+    healthy_deadline = "5m"
 
     # The "progress_deadline" parameter specifies the deadline in which an
     # allocation must be marked as healthy. The deadline begins when the first
@@ -81,7 +82,7 @@ job "mc-ftb-skyadventures1" {
     # as part of the deployment transitions to a healthy state. If no allocation
     # transitions to the healthy state before the progress deadline, the
     # deployment is marked as failed.
-    progress_deadline = "20m"
+    progress_deadline = "10m"
 
     # The "auto_revert" parameter specifies if the job should auto-revert to the
     # last stable job on deployment failure. A job is marked as stable if all the
@@ -120,12 +121,12 @@ job "mc-ftb-skyadventures1" {
     # Specifies the minimum time the allocation must be in the healthy state
     # before it is marked as healthy and unblocks further allocations from being
     # migrated. This is specified using a label suffix like "30s" or "15m".
-    min_healthy_time = "30s"
+    min_healthy_time = "10s"
 
     # Specifies the deadline in which the allocation must be marked as healthy
     # after which the allocation is automatically transitioned to unhealthy. This
     # is specified using a label suffix like "2m" or "1h".
-    healthy_deadline = "10m"
+    healthy_deadline = "5m"
   }
   # The "group" stanza defines a series of tasks that should be co-located on
   # the same Nomad client. Any task within a group will be placed on the same
@@ -136,7 +137,7 @@ job "mc-ftb-skyadventures1" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-ftb-skyadventures1" {
+  group "mc-router" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -152,7 +153,10 @@ job "mc-ftb-skyadventures1" {
     #
     network {
       port "minecraft" {
-        to = 25565
+        static = 25565
+      }
+      port "api" {
+        static = 7069
       }
     }
 
@@ -167,14 +171,10 @@ job "mc-ftb-skyadventures1" {
     #     https://www.nomadproject.io/docs/job-specification/service
     #
     service {
-      name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "ftb_skyadventures", "mc-router-register"]
+      name     = "mc-router"
+      tags     = ["global", "minecraft", "tcp"]
       port     = "minecraft"
       provider = "consul"
-      meta {
-        mc-router-register = "true"
-        externalServerName = "skyadventures.big.netlobo.com"
-      }
 
       # The "check" stanza instructs Nomad to create a Consul health check for
       # this service. A sample check is provided here for your convenience;
@@ -184,9 +184,23 @@ job "mc-ftb-skyadventures1" {
       check {
         name     = "alive"
         type     = "tcp"
-        interval = "30s"
-        timeout  = "5s"
+        port     = "minecraft"
+        interval = "10s"
+        timeout  = "2s"
       }
+    }
+
+    service {
+      name     = "mc-router-api"
+      tags     = ["global", "tcp"]
+      port     = "api"
+      provider = "consul"
+
+      # The "check" stanza instructs Nomad to create a Consul health check for
+      # this service. A sample check is provided here for your convenience;
+      # uncomment it to enable it. The "check" stanza is documented in the
+      # "service" stanza documentation.
+
     }
 
     # The "restart" stanza configures a group's behavior on task failure. If
@@ -210,7 +224,7 @@ job "mc-ftb-skyadventures1" {
       # "attempts" times within the interval. "delay" mode delays the next
       # restart until the next interval. "fail" mode does not restart the task
       # if "attempts" has been hit within the interval.
-      mode = "fail"
+      mode = "delay"
     }
 
     # The "ephemeral_disk" stanza instructs Nomad to utilize an ephemeral disk
@@ -223,7 +237,7 @@ job "mc-ftb-skyadventures1" {
     #
     #     https://www.nomadproject.io/docs/job-specification/ephemeral_disk
     #
-    ephemeral_disk {
+    # ephemeral_disk {
       # When sticky is true and the task group is updated, the scheduler
       # will prefer to place the updated allocation on the same node and
       # will migrate the data. This is useful for tasks that store data
@@ -236,8 +250,8 @@ job "mc-ftb-skyadventures1" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 5000
-    }
+      # size = 300
+    # }
 
     # The "affinity" stanza enables operators to express placement preferences
     # based on node attributes or metadata.
@@ -296,7 +310,7 @@ job "mc-ftb-skyadventures1" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-ftb-skyadventures1" {
+    task "mc-router" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -306,7 +320,7 @@ job "mc-ftb-skyadventures1" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "itzg/minecraft-server:java8-multiarch"
+        image = "itzg/mc-router"
         ports = ["minecraft"]
 
         # The "auth_soft_fail" configuration instructs Nomad to try public
@@ -314,7 +328,7 @@ job "mc-ftb-skyadventures1" {
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/ftb_skyadventures1/data:/data"
+          "/mnt/fast/mc-router/:/configs"
         ]
       }
 
@@ -363,9 +377,9 @@ job "mc-ftb-skyadventures1" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 6
-        memory     = 6144 # 6GB
-        memory_max = 7168 # 7GB
+        cpu        = 2000  # 2000Mhz
+        memory     = 128 # 128MB
+        memory_max = 256 # 256MB
       }
 
 
@@ -389,11 +403,13 @@ job "mc-ftb-skyadventures1" {
       # for tasks that prefer those to config files. The task will be restarted
       # when data pulled from Consul or Vault changes.
       #
-      # template {
-      #   data        = "KEY={{ key \"service/my-key\" }}"
-      #   destination = "local/file.env"
-      #   env         = true
-      # }
+      template {
+        data        = <<EOF
+MAPPING={{ $first := true }}{{- range service "mc-router-register.minecraft" }}{{ if $first }}{{ $first = false }}{{ else }},{{ end }}{{ .ServiceMeta.externalServerName }}={{ .Address }}:{{ .Port }}{{ end -}}
+EOF
+        destination = "local/mapping.env"
+        env         = true
+      }
 
       # The "vault" stanza instructs the Nomad client to acquire a token from
       # a HashiCorp Vault server. The Nomad servers must be configured and
@@ -417,22 +433,7 @@ job "mc-ftb-skyadventures1" {
       # and killing the task. If not set a default is used.
       # kill_timeout = "20s"
       env {
-        EULA = "TRUE"
-        UID = 1001
-        GID = 1001
-        SERVER_NAME = "Barlow Craft - FTB - Skyadventures1"
-        MODE = "survival"
-        DIFFICULTY = "hard"
-        VIEW_DISTANCE = 12
-        MAX_PLAYERS = 20
-        SEED = "Barlow Craft - FTB - Skyadventures1"
-        OPS = "netlobo"
-        MOTD = "Barlow Craft - FTB - Skyadventures1"
-        TYPE = "FTBA"
-        FTB_MODPACK_ID = 33
-        FTB_MODPACK_VERSION_ID = 148
-        VERSION = "1.12.2"
-        MAX_MEMORY = "6G"
+        API_BINDING = ":${NOMAD_PORT_api}"
       }
     }
   }

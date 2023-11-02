@@ -11,14 +11,15 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "mc-vanilla11" {
+job "lidarr" {
+  node_pool = "beast"
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
   #
   # The "datacenters" parameter specifies the list of datacenters which should
   # be considered when placing this task. This must be provided.
-  datacenters = ["dc1"]
+  datacenters = ["pondside"]
 
   # The "type" parameter controls the type of job, which impacts the scheduler's
   # decision on placement. This configuration is optional and defaults to
@@ -66,14 +67,14 @@ job "mc-vanilla11" {
     # The "min_healthy_time" parameter specifies the minimum time the allocation
     # must be in the healthy state before it is marked as healthy and unblocks
     # further allocations from being updated.
-    min_healthy_time = "30s"
+    min_healthy_time = "10s"
 
     # The "healthy_deadline" parameter specifies the deadline in which the
     # allocation must be marked as healthy after which the allocation is
     # automatically transitioned to unhealthy. Transitioning to unhealthy will
     # fail the deployment and potentially roll back the job if "auto_revert" is
     # set to true.
-    healthy_deadline = "10m"
+    healthy_deadline = "5m"
 
     # The "progress_deadline" parameter specifies the deadline in which an
     # allocation must be marked as healthy. The deadline begins when the first
@@ -81,7 +82,7 @@ job "mc-vanilla11" {
     # as part of the deployment transitions to a healthy state. If no allocation
     # transitions to the healthy state before the progress deadline, the
     # deployment is marked as failed.
-    progress_deadline = "20m"
+    progress_deadline = "10m"
 
     # The "auto_revert" parameter specifies if the job should auto-revert to the
     # last stable job on deployment failure. A job is marked as stable if all the
@@ -120,12 +121,12 @@ job "mc-vanilla11" {
     # Specifies the minimum time the allocation must be in the healthy state
     # before it is marked as healthy and unblocks further allocations from being
     # migrated. This is specified using a label suffix like "30s" or "15m".
-    min_healthy_time = "30s"
+    min_healthy_time = "10s"
 
     # Specifies the deadline in which the allocation must be marked as healthy
     # after which the allocation is automatically transitioned to unhealthy. This
     # is specified using a label suffix like "2m" or "1h".
-    healthy_deadline = "10m"
+    healthy_deadline = "5m"
   }
   # The "group" stanza defines a series of tasks that should be co-located on
   # the same Nomad client. Any task within a group will be placed on the same
@@ -136,7 +137,7 @@ job "mc-vanilla11" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "mc-vanilla11" {
+  group "lidarr" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -151,9 +152,10 @@ job "mc-vanilla11" {
     #     https://www.nomadproject.io/docs/job-specification/network
     #
     network {
-      port "minecraft" {
-        to = 25565
+      port "lidarr" {
+        static = 8686
       }
+      mode = "host"
     }
 
     # The "service" stanza instructs Nomad to register this task as a service
@@ -167,25 +169,31 @@ job "mc-vanilla11" {
     #     https://www.nomadproject.io/docs/job-specification/service
     #
     service {
-      name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "vanilla11", "mc-router-register"]
-      port     = "minecraft"
+      name     = "lidarr"
+      port     = "lidarr"
       provider = "consul"
-      meta {
-        mc-router-register = "true"
-        externalServerName = "vanilla11.big.netlobo.com"
-      }
+      tags     = [
+        "traefik.enable=true",
+        "traefik.http.routers.lidarr.rule=Host(`lidarr.big.netlobo.com`)",
+        "traefik.http.routers.lidarr.entrypoints=websecure",
+        "traefik.http.routers.lidarr.tls=true"
+      ]
 
       # The "check" stanza instructs Nomad to create a Consul health check for
       # this service. A sample check is provided here for your convenience;
       # uncomment it to enable it. The "check" stanza is documented in the
       # "service" stanza documentation.
-
       check {
-        name     = "alive"
-        type     = "tcp"
+        type = "http"
+        path = "/system/status"
+        port = "lidarr"
         interval = "30s"
-        timeout  = "5s"
+        timeout = "20s"
+
+        check_restart {
+          limit = 3
+          grace = "2m"
+        }
       }
 
     }
@@ -200,18 +208,18 @@ job "mc-vanilla11" {
     #
     restart {
       # The number of attempts to run the job within the specified interval.
-      attempts = 2
-      interval = "30m"
+      attempts = 5
+      interval = "5m"
 
       # The "delay" parameter specifies the duration to wait before restarting
       # a task after it has failed.
-      delay = "15s"
+      delay = "30s"
 
       # The "mode" parameter controls what happens when a task has restarted
       # "attempts" times within the interval. "delay" mode delays the next
       # restart until the next interval. "fail" mode does not restart the task
       # if "attempts" has been hit within the interval.
-      mode = "fail"
+      mode = "delay"
     }
 
     # The "ephemeral_disk" stanza instructs Nomad to utilize an ephemeral disk
@@ -237,7 +245,7 @@ job "mc-vanilla11" {
       #
       # The "size" parameter specifies the size in MB of shared ephemeral disk
       # between tasks in the group.
-      size = 5000
+      size = 300
     }
 
     # The "affinity" stanza enables operators to express placement preferences
@@ -297,7 +305,7 @@ job "mc-vanilla11" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "mc-vanilla11" {
+    task "lidarr" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -307,15 +315,19 @@ job "mc-vanilla11" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "itzg/minecraft-server"
-        ports = ["minecraft"]
-
+        image = "linuxserver/lidarr:latest"
+        network_mode = "host"
+        ports = ["lidarr"]
         # The "auth_soft_fail" configuration instructs Nomad to try public
         # repositories if the task fails to authenticate when pulling images
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/minecraft/vanilla11/data:/data"
+          "/mnt/fast/lidarr/config:/config",
+          "/mnt/media/downloads:/downloads",
+          "/mnt/media/music:/music",
+          "/mnt/media2/downloads:/downloads2",
+          "/mnt/media2/music:/music2"
         ]
       }
 
@@ -364,9 +376,9 @@ job "mc-vanilla11" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 2
-        memory     = 2560  # 2.5GB
-        memory_max = 3072  # 3GB
+        cores      = 1
+        memory     = 2048  # 2GB
+        memory_max = 2560  # 2.5GB
       }
 
 
@@ -418,18 +430,10 @@ job "mc-vanilla11" {
       # and killing the task. If not set a default is used.
       # kill_timeout = "20s"
       env {
-        EULA = "TRUE"
-        UID = 1001
-        GID = 1001
-        SERVER_NAME = "Barlow Craft - Vanilla11"
-        MODE = "survival"
-        DIFFICULTY = "hard"
-        VIEW_DISTANCE = 6
-        MAX_PLAYERS = 20
-        SEED = "Barlow Craft - Vanilla11"
-        OPS = "netlobo"
-        MOTD = "Barlow Craft - Vanilla11"
-        MAX_MEMORY = "2G"
+        PUID = 1002
+        PGID = 1002
+        TZ = "America/Denver"
+        UMASK = "022"
       }
     }
   }

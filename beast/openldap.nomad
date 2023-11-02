@@ -11,14 +11,15 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job
 #
-job "plex" {
+job "openldap" {
+  node_pool = "beast"
   # The "region" parameter specifies the region in which to execute the job.
   # If omitted, this inherits the default region name of "global".
   # region = "global"
   #
   # The "datacenters" parameter specifies the list of datacenters which should
   # be considered when placing this task. This must be provided.
-  datacenters = ["dc1"]
+  datacenters = ["pondside"]
 
   # The "type" parameter controls the type of job, which impacts the scheduler's
   # decision on placement. This configuration is optional and defaults to
@@ -136,7 +137,7 @@ job "plex" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group
   #
-  group "plex" {
+  group "openldap" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -151,8 +152,11 @@ job "plex" {
     #     https://www.nomadproject.io/docs/job-specification/network
     #
     network {
-      port "plex" {
-        static = 32400
+      port "ldap" {
+        static = 1389
+      }
+      port "ldaps" {
+        static = 1636
       }
       mode = "host"
     }
@@ -168,9 +172,9 @@ job "plex" {
     #     https://www.nomadproject.io/docs/job-specification/service
     #
     service {
-      name     = "plex"
-      port     = "plex"
-      tags     = ["global", "tcp", "plex"]
+      name     = "openldap"
+      port     = "ldap"
+      tags     = ["global", "tcp", "openldap"]
       provider = "consul"
 
       # The "check" stanza instructs Nomad to create a Consul health check for
@@ -178,10 +182,10 @@ job "plex" {
       # uncomment it to enable it. The "check" stanza is documented in the
       # "service" stanza documentation.
       check {
-        type = "tcp"
-        port = "plex"
+        type     = "tcp"
+        port     = "ldap"
         interval = "30s"
-        timeout = "20s"
+        timeout  = "20s"
 
         check_restart {
           limit = 3
@@ -298,7 +302,7 @@ job "plex" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task
     #
-    task "plex" {
+    task "openldap" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
@@ -308,21 +312,15 @@ job "plex" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "linuxserver/plex:latest"
+        image        = "bitnami/openldap:latest"
         network_mode = "host"
-        ports = ["plex"]
+        ports        = ["ldap", "ldaps"]
         # The "auth_soft_fail" configuration instructs Nomad to try public
         # repositories if the task fails to authenticate when pulling images
         # and the Docker driver has an "auth" configuration block.
         auth_soft_fail = true
         volumes = [
-          "/opt/plex/config:/config",
-          "/mnt/media/tv:/tv",
-          "/mnt/media/tv-hidden:/tv-hidden",
-          "/mnt/media/movies:/movies",
-          "/mnt/media/movies-hidden:/movies-hidden",
-          "/opt/plex/transcode:/transcode",
-          "/mnt/media/music:/music"
+          "/opt/openldap/ldifs:/ldifs"
         ]
       }
 
@@ -371,9 +369,9 @@ job "plex" {
       #     https://www.nomadproject.io/docs/job-specification/resources
       #
       resources {
-        cores      = 8
-        memory     = 6144  # 6GB
-        memory_max = 7168  # 7GB
+        cores      = 1
+        memory     = 1024 # 1GB
+        memory_max = 2048 # 2GB
       }
 
 
@@ -425,10 +423,12 @@ job "plex" {
       # and killing the task. If not set a default is used.
       # kill_timeout = "20s"
       env {
-        PUID = 1002
-        PGID = 1002
-        VERSION = "docker"
-        UMASK_SET = "022"
+        LDAP_ROOT           = "dc=netlobo,dc=com"
+        LDAP_ADMIN_USERNAME = "netlobo"
+        LDAP_ADMIN_PASSWORD = "n!FCeqFeC_CqY4mPkiL"
+        #LDAP_USERS = "ckm,appteam"
+        #LDAP_PASSWORDS = "test123,test123"
+        #LDAP_GROUP = "normalusers"
       }
     }
   }
