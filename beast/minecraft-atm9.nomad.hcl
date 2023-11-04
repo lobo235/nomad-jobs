@@ -426,7 +426,7 @@ job "mc-atm9" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 v0.2.4"
+        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 v0.2.12"
         MODE = "survival"
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
@@ -435,9 +435,9 @@ job "mc-atm9" {
         MAX_PLAYERS = 40
         SEED = "Barlow Craft - ATM9"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM9 v0.2.4"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM9 v0.2.12"
         TYPE = "FORGE"
-        GENERIC_PACK = "/modpacks/Server-Files-0.2.4.zip"
+        GENERIC_PACK = "/modpacks/Server-Files-0.2.12.zip"
         VERSION = "1.20.1"
         FORGE_VERSION = "47.1.3"
         MAX_MEMORY = "10G"

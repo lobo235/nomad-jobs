@@ -24,11 +24,9 @@ job "heimdall" {
 
     network {
       port "heimdall" {
-        static = 8888
         to = 80
       }
       port "heimdall_secure" {
-        static = 8889
         to = 443
       }
       mode = "bridge"
@@ -74,7 +72,6 @@ job "heimdall" {
         image = "linuxserver/heimdall:latest"
         network_mode = "bridge"
         ports = ["heimdall", "heimdall_secure"]
-
         auth_soft_fail = true
         volumes = [
           "/mnt/fast/heimdall/config:/config"
