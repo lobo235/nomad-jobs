@@ -77,10 +77,10 @@ job "radarr" {
           "/mnt/fast/radarr/config:/config",
           "/mnt/media/downloads:/downloads",
           "/mnt/media/movies:/movies",
-          "/mnt/media/movies-hidden:/movies-hidden",
-          "/mnt/media2/downloads:/downloads2",
-          "/mnt/media2/movies:/movies2",
-          "/mnt/media2/movies-hidden:/movies2-hidden"
+          "/mnt/media/movies-hidden:/movies-hidden"
+#          "/mnt/media2/downloads:/downloads2",
+#          "/mnt/media2/movies:/movies2",
+#          "/mnt/media2/movies-hidden:/movies2-hidden"
         ]
       }
 

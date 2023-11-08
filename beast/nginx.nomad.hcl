@@ -1,7 +1,7 @@
 job "nginx" {
   node_pool = "hashi"
   datacenters = ["pondside"]
-  type = "service"
+  type = "system"
 
   update {
     max_parallel = 1
@@ -12,15 +12,8 @@ job "nginx" {
     canary = 0
   }
 
-  migrate {
-    max_parallel = 1
-    health_check = "checks"
-    min_healthy_time = "10s"
-    healthy_deadline = "5m"
-  }
-
   group "nginx" {
-    count = 3
+    count = 1
 
     network {
       mode = "bridge"

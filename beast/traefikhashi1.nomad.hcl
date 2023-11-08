@@ -1,27 +1,35 @@
-job "traefiknew" {
+job "traefikhashi" {
     datacenters = ["pondside"]
+    node_pool   = "hashi"
     type        = "service"
-    node_pool   = "beast"
+
+  constraint {
+    attribute = "${attr.unique.hostname}"
+    value     = "hashi1"
+  }
 
     group "traefik" {
+        count = 1
+
         network {
             mode = "host"
             port "web" {
-                static = 80
+              static = 8888
             }
             port "websecure" {
-                static = 443
+              static = 8443
             }
             port "api" {
-                static = 8080
+              static = 8080
             }
-            port "tcp" {
-                static = 8008
+            port "dns" {
+              static = 53
+              host_network = "public"
             }
         }
 
         service {
-            name = "traefik"
+            name = "traefikhashi"
             port = "web"
             provider = "consul"
 
@@ -39,9 +47,9 @@ job "traefiknew" {
             port = "api"
             provider = "consul"
             tags = [
-                "traefik.http.routers.api.rule=Host(`traefik.big.netlobo.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))",
-                "traefik.http.routers.api.service=api@internal",
-                "traefik.http.routers.api.entrypoints=traefik"
+                "traefikhashi.http.routers.api.rule=Host(`hashi1.big.netlobo.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))",
+                "traefikhashi.http.routers.api.service=api@internal",
+                "traefikhashi.http.routers.api.entrypoints=traefik"
             ]
 
 #            check {
@@ -61,7 +69,7 @@ job "traefiknew" {
             config {
                 image        = "traefik:latest"
                 network_mode = "host"
-                ports        = ["web", "websecure", "api", "tcp"]
+                ports        = ["web", "websecure", "api", "dns"]
                 auth_soft_fail = true
                 volumes = [
                     "local/traefik.yaml:/etc/traefik/traefik.yaml",
@@ -74,13 +82,15 @@ job "traefiknew" {
                 data = <<EOF
 entryPoints:
   web:
-    address: ":80"
+    address: ":8888"
   websecure:
-    address: ":443"
-  tcp:
-    address: ":8008"
-  mariadb:
-    address: ":3306"
+    address: ":8443"
+  dnstcp:
+    address: "{{ env "NOMAD_IP_dns" }}:53/tcp"
+  dnsudp:
+    address: "{{ env "NOMAD_IP_dns" }}:53/udp"
+    udp:
+      timeout: 10s
 
 ping:
   entryPoint: "web"
@@ -118,19 +128,19 @@ providers:
     filename: /local/traefik.yaml
     watch: true
   consulCatalog:
-    prefix: "traefik"
+    prefix: "traefikhashi"
     exposedByDefault: false
     endpoint:
       address: http://{{ env "NOMAD_IP_web" }}:8500
       scheme: "http"
-      token: "{{ with nomadVar "nomad/jobs/traefiknew" }}{{ .consul_token }}{{ end }}"
+      token: "{{ with nomadVar "nomad/jobs/traefikhashi1" }}{{ .consul_token }}{{ end }}"
 EOF
                 destination = "local/traefik.yaml"
             }
 
             resources {
-                cores    = 2
-                memory = 4024
+                cores    = 1
+                memory = 1024
             }
         }
     }

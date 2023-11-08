@@ -76,9 +76,9 @@ job "lidarr" {
         volumes = [
           "/mnt/fast/lidarr/config:/config",
           "/mnt/media/downloads:/downloads",
-          "/mnt/media/music:/music",
-          "/mnt/media2/downloads:/downloads2",
-          "/mnt/media2/music:/music2"
+          "/mnt/media/music:/music"
+#          "/mnt/media2/downloads:/downloads2",
+#          "/mnt/media2/music:/music2"
         ]
       }
 

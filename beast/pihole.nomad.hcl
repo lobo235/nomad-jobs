@@ -1,7 +1,7 @@
 job "pihole" {
   node_pool = "hashi"
   datacenters = ["pondside"]
-  type = "service"
+  type = "system"
 
   update {
     max_parallel = 1
@@ -12,15 +12,8 @@ job "pihole" {
     canary = 0
   }
 
-  migrate {
-    max_parallel = 1
-    health_check = "checks"
-    min_healthy_time = "10s"
-    healthy_deadline = "5m"
-  }
-
   group "pihole" {
-    count = 3
+    count = 1
 
     network {
       mode = "bridge"
@@ -41,7 +34,7 @@ job "pihole" {
       port     = "dns-tcp"
       tags     = [
         "traefik.enable=true",
-        "traefik.tcp.routers.pihole-dns-tcp.rule=HostSNI(`*`)",
+        "traefik.tcp.routers.pihole-dns-tcp.rule=HostSNI(`pihole.big.netlobo.com`)",
         "traefik.tcp.services.pihole-dns-tcp.loadbalancer.server.port=53",
         "traefik.tcp.routers.pihole-dns-tcp.entrypoints=pihole-dns-tcp"
       ]

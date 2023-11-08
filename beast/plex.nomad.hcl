@@ -79,11 +79,11 @@ job "plex" {
           "/mnt/media/movies:/movies",
           "/mnt/media/movies-hidden:/movies-hidden",
           "/mnt/media/music:/music",
-          "/mnt/media2/tv:/tv2",
-          "/mnt/media2/tv-hidden:/tv2-hidden",
-          "/mnt/media2/movies:/movies2",
-          "/mnt/media2/movies-hidden:/movies2-hidden",
-          "/mnt/media2/music:/music2",
+#          "/mnt/media2/tv:/tv2",
+#          "/mnt/media2/tv-hidden:/tv2-hidden",
+#          "/mnt/media2/movies:/movies2",
+#          "/mnt/media2/movies-hidden:/movies2-hidden",
+#          "/mnt/media2/music:/music2",
           "/mnt/fast/plex/transcode:/transcode"
         ]
       }
@@ -92,6 +92,9 @@ job "plex" {
         cores      = 20
         memory     = 32768  # 32GB
         memory_max = 40960  # 40GB
+        device "nvidia/gpu" {
+          count = 1
+        }
       }
 
       env {

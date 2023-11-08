@@ -80,10 +80,10 @@ job "sonarr" {
           "/mnt/fast/sonarr/config:/config",
           "/mnt/media/downloads:/downloads",
           "/mnt/media/tv:/tv",
-          "/mnt/media/tv-hidden:/tv-hidden",
-          "/mnt/media2/downloads:/downloads2",
-          "/mnt/media2/tv:/tv2",
-          "/mnt/media2/tv-hidden:/tv2-hidden"
+          "/mnt/media/tv-hidden:/tv-hidden"
+#          "/mnt/media2/downloads:/downloads2",
+#          "/mnt/media2/tv:/tv2",
+#          "/mnt/media2/tv-hidden:/tv2-hidden"
         ]
       }
 
