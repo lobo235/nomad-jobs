@@ -24,9 +24,9 @@ job "plex" {
 
     network {
       port "plex" {
-        to = 32400
+        static = 32400
       }
-      mode = "bridge"
+      mode = "host"
     }
 
     service {
