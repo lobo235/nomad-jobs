@@ -52,7 +52,6 @@ job "code-server" {
           grace = "2m"
         }
       }
-
     }
 
     restart {

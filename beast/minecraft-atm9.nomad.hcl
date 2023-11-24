@@ -26,6 +26,7 @@ job "mc-atm9" {
       port "minecraft" {
         to = 25565
       }
+      
     }
 
     service {

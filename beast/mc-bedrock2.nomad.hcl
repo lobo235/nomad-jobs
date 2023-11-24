@@ -1,4 +1,4 @@
-job "mc-bedrock1" {
+job "mc-bedrock2" {
   node_pool = "beast"
   datacenters = ["pondside"]
   type = "service"
@@ -19,16 +19,16 @@ job "mc-bedrock1" {
     healthy_deadline = "10m"
   }
 
-  group "mc-bedrock1" {
+  group "mc-bedrock2" {
     count = 1
 
     network {
       port "minecraft1" {
-        static = 19132
+        static = 19134
         to = 19132
       }
       port "minecraft2" {
-        static = 19133
+        static = 19135
         to = 19133
       }
       mode = "bridge"
@@ -36,7 +36,7 @@ job "mc-bedrock1" {
 
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "bedrock1"]
+      tags     = ["global", "minecraft", "tcp", "bedrock2"]
       port     = "minecraft1"
       provider = "consul"
     }
@@ -52,15 +52,16 @@ job "mc-bedrock1" {
       size = 500
     }
 
-    task "mc-bedrock1" {
+    task "mc-bedrock2" {
       driver = "docker"
+
       config {
         image = "itzg/minecraft-bedrock-server"
         ports = ["minecraft1", "minecraft2"]
         network_mode = "bridge"
         auth_soft_fail = true
         volumes = [
-          "/mnt/fast/minecraft/bedrock1/data:/data"
+          "/mnt/fast/minecraft/bedrock2/data:/data"
         ]
       }
 
@@ -74,15 +75,14 @@ job "mc-bedrock1" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aBedrock1"
+        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §abedrock2"
         MODE = "survival"
         DIFFICULTY = "hard"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
-        ONLINE_MODE = "true"
-        SEED = "Barlow Craft - Bedrock1"
+        SEED = "Barlow Craft - bedrock2"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aBedrock1"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7abedrock2"
         MAX_MEMORY = "2G"
         VERSION = "LATEST"
       }

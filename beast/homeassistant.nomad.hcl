@@ -1,4 +1,4 @@
-job "heimdall" {
+job "homeassistant" {
   node_pool = "beast"
   datacenters = ["pondside"]
   type = "service"
@@ -19,7 +19,7 @@ job "heimdall" {
     healthy_deadline = "5m"
   }
 
-  group "heimdall" {
+  group "homeassistant" {
     count = 1
 
     network {
@@ -30,20 +30,20 @@ job "heimdall" {
     }
 
     service {
-      name     = "heimdall"
-      port     = "heimdall"
+      name     = "homeassistant"
+      port     = "homeassistant"
       provider = "consul"
       tags     = [
         "traefik.enable=true",
-        "traefik.http.routers.heimdall.rule=Host(`heimdall.big.netlobo.com`)",
-        "traefik.http.routers.heimdall.entrypoints=websecure",
-        "traefik.http.routers.heimdall.tls=true"
+        "traefik.http.routers.homeassistant.rule=Host(`homeassistant.big.netlobo.com`)",
+        "traefik.http.routers.homeassistant.entrypoints=websecure",
+        "traefik.http.routers.homeassistant.tls=true"
       ]
 
       check {
         type = "http"
         path = "/"
-        port = "heimdall"
+        port = "homeassistant"
         interval = "30s"
         timeout = "20s"
 
@@ -62,28 +62,28 @@ job "heimdall" {
       mode = "delay"
     }
 
-    task "heimdall" {
+    task "homeassistant" {
       driver = "docker"
 
       config {
         image = "linuxserver/homeassistant:latest"
         network_mode = "host"
-        ports = ["heimdall", "heimdall_secure"]
+        ports = ["homeassistant"]
         auth_soft_fail = true
         volumes = [
-          "/mnt/fast/heimdall/config:/config"
+          "/mnt/fast/homeassistant/config:/config"
         ]
       }
 
       resources {
-        cores      = 1
-        memory     = 256  # 256MB
-        memory_max = 512  # 512MB
+        cores      = 2
+        memory     = 1024  # 1GB
+        memory_max = 1536  # 1.5GB
       }
 
       env {
-        PUID = 1002
-        PGID = 1002
+        PUID = 1000
+        PGID = 1000
         TZ = "America/Denver"
         UMASK = "022"
       }
