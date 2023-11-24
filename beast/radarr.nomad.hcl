@@ -75,12 +75,11 @@ job "radarr" {
         auth_soft_fail = true
         volumes = [
           "/mnt/fast/radarr/config:/config",
-          "/mnt/media/downloads:/downloads",
           "/mnt/media/movies:/movies",
-          "/mnt/media/movies-hidden:/movies-hidden"
-#          "/mnt/media2/downloads:/downloads2",
-#          "/mnt/media2/movies:/movies2",
-#          "/mnt/media2/movies-hidden:/movies2-hidden"
+          "/mnt/media/movies-hidden:/movies-hidden",
+          "/mnt/plex/movies:/movies2",
+          "/mnt/plex/movies-hidden:/movies2-hidden",
+          "/mnt/fast/sabnzbd/downloads:/downloads"
         ]
       }
 

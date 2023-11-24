@@ -1,4 +1,4 @@
-job "lidarr" {
+job "heimdall" {
   node_pool = "beast"
   datacenters = ["pondside"]
   type = "service"
@@ -19,31 +19,31 @@ job "lidarr" {
     healthy_deadline = "5m"
   }
 
-  group "lidarr" {
+  group "heimdall" {
     count = 1
 
     network {
-      port "lidarr" {
-        to = 8686
+      port "homeassistant" {
+        static = 8123
       }
-      mode = "bridge"
+      mode = "host"
     }
 
     service {
-      name     = "lidarr"
-      port     = "lidarr"
+      name     = "heimdall"
+      port     = "heimdall"
       provider = "consul"
       tags     = [
         "traefik.enable=true",
-        "traefik.http.routers.lidarr.rule=Host(`lidarr.big.netlobo.com`)",
-        "traefik.http.routers.lidarr.entrypoints=websecure",
-        "traefik.http.routers.lidarr.tls=true"
+        "traefik.http.routers.heimdall.rule=Host(`heimdall.big.netlobo.com`)",
+        "traefik.http.routers.heimdall.entrypoints=websecure",
+        "traefik.http.routers.heimdall.tls=true"
       ]
 
       check {
         type = "http"
-        path = "/system/status"
-        port = "lidarr"
+        path = "/"
+        port = "heimdall"
         interval = "30s"
         timeout = "20s"
 
@@ -52,6 +52,7 @@ job "lidarr" {
           grace = "2m"
         }
       }
+
     }
 
     restart {
@@ -61,30 +62,23 @@ job "lidarr" {
       mode = "delay"
     }
 
-    ephemeral_disk {
-      size = 300
-    }
-
-    task "lidarr" {
+    task "heimdall" {
       driver = "docker"
 
       config {
-        image = "linuxserver/lidarr:latest"
-        network_mode = "bridge"
-        ports = ["lidarr"]
+        image = "linuxserver/homeassistant:latest"
+        network_mode = "host"
+        ports = ["heimdall", "heimdall_secure"]
         auth_soft_fail = true
         volumes = [
-          "/mnt/fast/lidarr/config:/config",
-          "/mnt/media/music:/music",
-          "/mnt/plex/music:/music2",
-          "/mnt/fast/sabnzbd/downloads:/downloads"
+          "/mnt/fast/heimdall/config:/config"
         ]
       }
 
       resources {
         cores      = 1
-        memory     = 2048  # 2GB
-        memory_max = 2560  # 2.5GB
+        memory     = 256  # 256MB
+        memory_max = 512  # 512MB
       }
 
       env {

@@ -78,12 +78,11 @@ job "sonarr" {
         auth_soft_fail = true
         volumes = [
           "/mnt/fast/sonarr/config:/config",
-          "/mnt/media/downloads:/downloads",
           "/mnt/media/tv:/tv",
-          "/mnt/media/tv-hidden:/tv-hidden"
-#          "/mnt/media2/downloads:/downloads2",
-#          "/mnt/media2/tv:/tv2",
-#          "/mnt/media2/tv-hidden:/tv2-hidden"
+          "/mnt/media/tv-hidden:/tv-hidden",
+          "/mnt/plex/tv:/tv2",
+          "/mnt/plex/tv-hidden:/tv2-hidden",
+          "/mnt/fast/sabnzbd/downloads:/downloads"
         ]
       }
 

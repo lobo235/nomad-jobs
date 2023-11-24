@@ -79,12 +79,12 @@ job "bazarr" {
           "/mnt/media/movies:/movies",
           "/mnt/media/movies-hidden:/movies-hidden",
           "/mnt/media/tv:/tv",
-          "/mnt/media/tv-hidden:/tv-hidden"
-#          "/mnt/media2/downloads:/downloads2",
-#          "/mnt/media2/movies:/movies2",
-#          "/mnt/media2/movies-hidden:/movies2-hidden",
-#          "/mnt/media2/tv:/tv2",
-#          "/mnt/media2/tv-hidden:/tv2-hidden"
+          "/mnt/media/tv-hidden:/tv-hidden",
+          "/mnt/plex/downloads:/downloads2",
+          "/mnt/plex/movies:/movies2",
+          "/mnt/plex/movies-hidden:/movies2-hidden",
+          "/mnt/plex/tv:/tv2",
+          "/mnt/plex/tv-hidden:/tv2-hidden"
         ]
       }
 

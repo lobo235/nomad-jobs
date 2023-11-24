@@ -77,19 +77,18 @@ job "sabnzbd" {
         auth_soft_fail = true
         volumes = [
           "/mnt/fast/sabnzbd/config:/config",
-          "/mnt/media/downloads:/downloads",
           "/mnt/media/music:/music",
           "/mnt/media/tv:/tv",
           "/mnt/media/tv-hidden:/tv-hidden",
           "/mnt/media/movies:/movies",
           "/mnt/media/movies-hidden:/movies-hidden",
-#          "/mnt/media2/downloads:/downloads2",
-#          "/mnt/media2/music:/music2",
-#          "/mnt/media2/tv:/tv2",
-#          "/mnt/media2/tv-hidden:/tv2-hidden",
-#          "/mnt/media2/movies:/movies2",
-#          "/mnt/media2/movies-hidden:/movies2-hidden",
-          "/mnt/fast/sabnzbd/incomplete-downloads:/incomplete-downloads"
+          "/mnt/plex/music:/music2",
+          "/mnt/plex/tv:/tv2",
+          "/mnt/plex/tv-hidden:/tv2-hidden",
+          "/mnt/plex/movies:/movies2",
+          "/mnt/plex/movies-hidden:/movies2-hidden",
+          "/mnt/fast/sabnzbd/incomplete-downloads:/incomplete-downloads",
+          "/mnt/fast/sabnzbd/downloads:/downloads"
         ]
       }
 
