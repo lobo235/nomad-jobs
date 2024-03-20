@@ -71,6 +71,7 @@ job "plex" {
         image = "linuxserver/plex:latest"
         network_mode = "host"
         ports = ["plex"]
+        runtime = "nvidia"
         auth_soft_fail = true
         volumes = [
           "/mnt/fast/plex/config:/config",
@@ -92,12 +93,11 @@ job "plex" {
         cores      = 20
         memory     = 32768  # 32GB
         memory_max = 40960  # 40GB
-        device "nvidia/gpu" {
-          count = 1
-        }
       }
 
       env {
+        NVIDIA_VISIBLE_DEVICES = "all"
+        NVIDIA_DRIVER_CAPABILITIES = "compute,video,utility"
         PUID = 1002
         PGID = 1002
         VERSION = "docker"
