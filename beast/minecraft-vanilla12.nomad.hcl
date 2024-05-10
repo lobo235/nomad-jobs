@@ -85,7 +85,7 @@ job "mc-vanilla12" {
         DIFFICULTY = "hard"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - Vanilla12"
+        SEED = "Barlow Craft - Vanilla12-1"
         OPS = "netlobo"
         MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aVanilla12"
         MAX_MEMORY = "2G"
