@@ -1,4 +1,4 @@
-job "mc-atm9" {
+job "mc-atm9-tts" {
   node_pool = "beast"
   datacenters = ["pondside"]
   type = "service"
@@ -19,7 +19,7 @@ job "mc-atm9" {
     healthy_deadline = "10m"
   }
 
-  group "mc-atm9" {
+  group "mc-atm9-tts" {
     count = 1
 
     network {
@@ -31,12 +31,12 @@ job "mc-atm9" {
 
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "atm9", "mc-router-register"]
+      tags     = ["global", "minecraft", "tcp", "atm9-tts", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "atm9.big.netlobo.com"
+        externalServerName = "atm9-tts.big.netlobo.com"
       }
 
       check {
@@ -58,7 +58,7 @@ job "mc-atm9" {
       size = 300
     }
 
-    task "mc-atm9" {
+    task "mc-atm9-tts" {
       driver = "docker"
 
       config {
@@ -66,11 +66,11 @@ job "mc-atm9" {
         ports = ["minecraft"]
         auth_soft_fail = true
         volumes = [
-          "/mnt/fast/minecraft/atm9/data:/data",
-          "/mnt/fast/minecraft/atm9/modpacks:/modpacks",
-          "/mnt/fast/minecraft/atm9/mods:/mods",
-          "/mnt/fast/minecraft/atm9/config:/config",
-          "/mnt/fast/minecraft/atm9/plugins:/plugins"
+          "/mnt/fast/minecraft/atm9-tts/data:/data",
+          "/mnt/fast/minecraft/atm9-tts/modpacks:/modpacks",
+          "/mnt/fast/minecraft/atm9-tts/mods:/mods",
+          "/mnt/fast/minecraft/atm9-tts/config:/config",
+          "/mnt/fast/minecraft/atm9-tts/plugins:/plugins"
         ]
       }
 
@@ -84,20 +84,20 @@ job "mc-atm9" {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 v0.2.58"
+        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 - To The Sky v1.0.0"
         MODE = "survival"
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
         ENABLE_COMMAND_BLOCK = "TRUE"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 40
-        SEED = "Barlow Craft - ATM9"
+        SEED = "Barlow Craft - ATM9 - To The Sky"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM9 v0.2.58"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM9 - To The Sky v1.0.0"
         TYPE = "FORGE"
-        GENERIC_PACK = "/modpacks/Server-Files-0.2.58.zip"
+        GENERIC_PACK = "/modpacks/server-1.0.zip"
         VERSION = "1.20.1"
-        FORGE_VERSION = "47.2.20"
+        FORGE_VERSION = "47.2.0"
         MAX_MEMORY = "10G"
         MAX_WORLD_SIZE = 16016
         MAX_TICK_TIME = -1
