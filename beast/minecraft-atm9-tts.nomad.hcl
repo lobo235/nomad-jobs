@@ -54,8 +54,9 @@ job "mc-atm9-tts" {
       mode = "fail"
     }
 
-    ephemeral_disk {
-      size = 300
+    vault {
+      cluster = "default"
+      change_mode = "noop"
     }
 
     task "mc-atm9-tts" {
@@ -74,17 +75,30 @@ job "mc-atm9-tts" {
         ]
       }
 
+      template {
+        data        = <<EOH
+{{ with secret "kv/nomad/default/mc-atm9-tts" }}
+CF_API_KEY={{ .Data.data.curseforge_apikey }}
+{{ end }}
+EOH
+        destination = "local/env.txt"
+        env         = true
+      }
+
       resources {
         cores      = 12
-        memory     = 14576  # 14GB
-        memory_max = 20720  # 20GB
+        memory     = 12288  # 12GB
+      }
+
+      meta {
+        PACKVERSION = "1.0.6"
       }
 
       env {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 - To The Sky v1.0.0"
+        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 - To The Sky v${NOMAD_META_PACKVERSION}"
         MODE = "survival"
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
@@ -93,11 +107,11 @@ job "mc-atm9-tts" {
         MAX_PLAYERS = 40
         SEED = "Barlow Craft - ATM9 - To The Sky"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM9 - To The Sky v1.0.0"
-        TYPE = "FORGE"
-        GENERIC_PACK = "/modpacks/server-1.0.zip"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aATM9 - To The Sky v${NOMAD_META_PACKVERSION}"
+        TYPE = "AUTO_CURSEFORGE"
+        CF_SLUG = "all-the-mods-9-to-the-sky"
+        CF_FILENAME_MATCHER = "${NOMAD_META_PACKVERSION}"
         VERSION = "1.20.1"
-        FORGE_VERSION = "47.2.0"
         MAX_MEMORY = "10G"
         MAX_WORLD_SIZE = 16016
         MAX_TICK_TIME = -1

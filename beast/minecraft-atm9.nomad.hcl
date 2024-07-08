@@ -76,8 +76,7 @@ job "mc-atm9" {
 
       resources {
         cores      = 12
-        memory     = 14576  # 14GB
-        memory_max = 20720  # 20GB
+        memory     = 12288  # 12GB
       }
 
       env {

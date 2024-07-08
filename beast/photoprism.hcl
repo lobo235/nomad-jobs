@@ -91,7 +91,6 @@ EOH
       resources {
         cores      = 6
         memory     = 16384  # 16GB
-        memory_max = 20480  # 20GB
       }
     }
   }
