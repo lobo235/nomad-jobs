@@ -90,9 +90,8 @@ job "plex" {
       }
 
       resources {
-        cores      = 20
+        cpu        = 24000
         memory     = 32768  # 32GB
-        memory_max = 40960  # 40GB
       }
 
       env {

@@ -71,9 +71,8 @@ job "mc-vanilla12" {
       }
 
       resources {
-        cores      = 3
+        cpu        = 3000
         memory     = 2560  # 2.5GB
-        memory_max = 3072  # 3GB
       }
 
       env {

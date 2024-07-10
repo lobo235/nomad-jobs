@@ -49,7 +49,6 @@ job "netlobo-linodedyndns" {
       resources {
         cpu        = 100 # 100MHz
         memory     = 64 # 64M
-        memory_max = 128 # 128M
       }
 
       env {
@@ -81,7 +80,6 @@ EOH
       resources {
         cpu        = 100 # 100MHz
         memory     = 64 # 64M
-        memory_max = 128 # 128M
       }
 
       env {
@@ -113,7 +111,6 @@ EOH
       resources {
         cpu        = 100 # 100MHz
         memory     = 64 # 64M
-        memory_max = 128 # 128M
       }
 
       env {

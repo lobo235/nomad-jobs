@@ -74,8 +74,7 @@ job "mc-router" {
 
       resources {
         cpu        = 2000  # 2000Mhz
-        memory     = 128 # 128MB
-        memory_max = 256 # 256MB
+        memory     = 256 # 256MB
       }
 
       template {

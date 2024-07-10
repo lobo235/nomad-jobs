@@ -86,12 +86,12 @@ EOH
       }
 
       resources {
-        cores      = 12
+        cpu        = 12000
         memory     = 12288  # 12GB
       }
 
       meta {
-        PACKVERSION = "1.0.6"
+        PACKVERSION = "1.0.7"
       }
 
       env {

@@ -89,9 +89,8 @@ job "bazarr" {
       }
 
       resources {
-        cores      = 1
+        cpu        = 2000
         memory     = 2048  # 2GB
-        memory_max = 2560  # 2.5GB
       }
 
       env {

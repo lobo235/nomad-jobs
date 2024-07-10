@@ -75,7 +75,7 @@ job "mc-atm9" {
       }
 
       resources {
-        cores      = 12
+        cpu        = 12000
         memory     = 12288  # 12GB
       }
 

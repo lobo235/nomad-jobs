@@ -11,6 +11,11 @@ job "photoprism" {
       }
     }
 
+    update {
+      healthy_deadline = "10m"
+      progress_deadline = "20m"
+    }
+
     service {
       name     = "photoprism"
       port     = "https"
@@ -89,7 +94,7 @@ EOH
       }
 
       resources {
-        cores      = 6
+        cpu        = 6000
         memory     = 16384  # 16GB
       }
     }

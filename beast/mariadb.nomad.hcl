@@ -57,8 +57,8 @@ EOH
         MARIADB_USER               = "bpexp235"
       }
       resources {
-        cores  = 4
-        memory = 4096
+        cpu    = 4000
+        memory = 4096 # 4GB
       }
       config {
         image   = "mariadb:10.11"

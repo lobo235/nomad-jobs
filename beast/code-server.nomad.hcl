@@ -80,9 +80,8 @@ job "code-server" {
       }
 
       resources {
-        cores      = 4
-        memory     = 16384  # 16GB
-        memory_max = 20480  # 20GB
+        cpu        = 1000
+        memory     = 2048  # 2GB
       }
 
       env {

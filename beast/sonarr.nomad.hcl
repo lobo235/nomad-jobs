@@ -87,9 +87,8 @@ job "sonarr" {
       }
 
       resources {
-        cores      = 4
+        cpu        = 4000
         memory     = 8192   # 8GB
-        memory_max = 10240  # 10GB
       }
 
       env {

@@ -129,8 +129,8 @@ EOF
             }
 
             resources {
-                cores    = 2
-                memory = 4096
+                cpu    = 2000
+                memory = 4096 # 4GB
             }
         }
     }

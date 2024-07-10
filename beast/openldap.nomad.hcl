@@ -76,9 +76,8 @@ job "openldap" {
       }
 
       resources {
-        cores      = 1
+        cpu        = 100
         memory     = 1024 # 1GB
-        memory_max = 2048 # 2GB
       }
 
       env {

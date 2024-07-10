@@ -93,9 +93,8 @@ job "sabnzbd" {
       }
 
       resources {
-        cores      = 4
+        cpu        = 4000
         memory     = 34816  # 34GB
-        memory_max = 36864  # 36GB
       }
 
       env {

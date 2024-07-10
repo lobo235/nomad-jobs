@@ -251,7 +251,7 @@ EOF
 cp /local/default.conf /config/nginx/site-confs/default.conf
 cp /local/ssl.conf /config/nginx/ssl.conf
 cp /local/revplex.conf /config/nginx/site-confs/revplex.conf
-chown -R 33:33 /config/nginx
+chown -R nginx:nginx /config/nginx
 EOF
         uid = 1
         gid = 0
@@ -262,7 +262,6 @@ EOF
       resources {
         cpu        = 2000
         memory     = 256  # 256MB
-        memory_max = 384  # 384MB
       }
 
       env {

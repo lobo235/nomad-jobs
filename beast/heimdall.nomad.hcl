@@ -79,9 +79,8 @@ job "heimdall" {
       }
 
       resources {
-        cores      = 1
-        memory     = 256  # 256MB
-        memory_max = 512  # 512MB
+        cpu        = 500
+        memory     = 512  # 512MB
       }
 
       env {
