@@ -191,6 +191,12 @@ server {
         # Buffering off send to the client as soon as the data is received from Plex.
         proxy_redirect off;
         proxy_buffering off;
+        
+        location /health {
+          access_log off;
+          add_header 'Content-Type' 'application/json';
+          return 200 '{"status":"UP"}';
+        }
 
         location / {
             proxy_pass $plex;
@@ -251,7 +257,6 @@ EOF
 cp /local/default.conf /config/nginx/site-confs/default.conf
 cp /local/ssl.conf /config/nginx/ssl.conf
 cp /local/revplex.conf /config/nginx/site-confs/revplex.conf
-chown -R nginx:nginx /config/nginx
 EOF
         uid = 1
         gid = 0
