@@ -92,6 +92,10 @@ job "plex" {
       resources {
         cpu        = 24000
         memory     = 32768  # 32GB
+        
+        device "nvidia/gpu" {
+          count = 1
+        }
       }
 
       env {

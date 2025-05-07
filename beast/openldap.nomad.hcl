@@ -84,9 +84,9 @@ job "openldap" {
         LDAP_ROOT           = "dc=netlobo,dc=com"
         LDAP_ADMIN_USERNAME = "netlobo"
         LDAP_ADMIN_PASSWORD = "n!FCeqFeC_CqY4mPkiL"
-        #LDAP_USERS = "ckm,appteam"
-        #LDAP_PASSWORDS = "test123,test123"
-        #LDAP_GROUP = "normalusers"
+        LDAP_USERS = "ckm,appteam"
+        LDAP_PASSWORDS = "test123,test123"
+        LDAP_GROUP = "normalusers"
       }
     }
   }

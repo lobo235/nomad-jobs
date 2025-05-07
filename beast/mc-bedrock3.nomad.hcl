@@ -1,4 +1,4 @@
-job "mc-vanilla12" {
+job "mc-bedrock3" {
   node_pool = "beast"
   datacenters = ["pondside"]
   type = "service"
@@ -19,33 +19,27 @@ job "mc-vanilla12" {
     healthy_deadline = "10m"
   }
 
-  group "mc-vanilla12" {
+  group "mc-bedrock3" {
     count = 1
 
     network {
-      port "minecraft" {
-        to = 25565
+      port "minecraft1" {
+        static = 19136
+        to = 19132
       }
+      port "minecraft2" {
+        static = 19137
+        to = 19133
+      }
+      mode = "bridge"
     }
 
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "vanilla12", "mc-router-register"]
-      port     = "minecraft"
+      tags     = ["global", "minecraft", "tcp", "bedrock3"]
+      port     = "minecraft1"
       provider = "consul"
-      meta {
-        mc-router-register = "true"
-        externalServerName = "vanilla12.big.netlobo.com"
-      }
-
-      check {
-        name     = "alive"
-        type     = "tcp"
-        interval = "30s"
-        timeout  = "5s"
-      }
     }
-
 
     restart {
       attempts = 2
@@ -55,39 +49,41 @@ job "mc-vanilla12" {
     }
 
     ephemeral_disk {
-      size = 300
+      size = 500
     }
 
-    task "mc-vanilla12" {
+    task "mc-bedrock3" {
       driver = "docker"
 
       config {
-        image = "itzg/minecraft-server"
-        ports = ["minecraft"]
+        image = "itzg/minecraft-bedrock-server"
+        ports = ["minecraft1", "minecraft2"]
+        network_mode = "bridge"
         auth_soft_fail = true
         volumes = [
-          "/mnt/fast/minecraft/vanilla12/data:/data"
+          "/mnt/fast/minecraft/bedrock3/data:/data"
         ]
       }
 
       resources {
-        cpu        = 8000
-        memory     = 4096  # 4GB
+        cores      = 2
+        memory     = 3072  # 3GB
       }
 
       env {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "Barlow Craft - Vanilla12"
+        SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §abedrock3"
         MODE = "survival"
         DIFFICULTY = "hard"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - Vanilla12-1"
+        SEED = "Barlow Craft - bedrock3"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aVanilla12"
-        MAX_MEMORY = "3.5G"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7abedrock3"
+        MAX_MEMORY = "2G"
+        VERSION = "LATEST"
       }
     }
   }

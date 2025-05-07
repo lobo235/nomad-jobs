@@ -77,6 +77,9 @@ entryPoints:
     address: ":80"
   websecure:
     address: ":443"
+    transport:
+      respondingTimeouts:
+        readTimeout: 600
   tcp:
     address: ":8008"
   mariadb:
