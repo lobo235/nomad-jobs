@@ -36,7 +36,7 @@ job "mc-atm10s" {
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "atm10s.big.netlobo.com"
+        externalServerName = "atm10.big.netlobo.com"
       }
 
       check {
@@ -64,7 +64,7 @@ job "mc-atm10s" {
 
       config {
         image = "itzg/minecraft-server"
-        entrypoint = ["/start-custom.sh"]
+        entrypoint = ["/local/entrypoint.sh"]
         ports = ["minecraft"]
         auth_soft_fail = true
         volumes = [
@@ -81,6 +81,25 @@ job "mc-atm10s" {
       resources {
         cpu        = 36000
         memory     = 16384  # 16GB
+      }
+
+      artifact {
+        source      = "https://raw.githubusercontent.com/lobo235/nomad-jobs/refs/heads/main/beast/artifacts/atm10-start-custom.sh"
+        destination = "local/"
+        options {
+          # Rename the file to start-custom.sh explicitly
+          filename = "start-custom.sh"
+        }
+      }
+
+      template {
+        data = <<EOF
+#!/bin/sh
+chmod +x /local/start-custom.sh
+exec /local/start-custom.sh
+      EOF
+        destination = "local/entrypoint.sh"
+        perms = "0755"
       }
 
       meta {
@@ -115,7 +134,7 @@ job "mc-atm10s" {
         MAX_TICK_TIME = 180000
         COPY_CONFIG_DEST= "/data/world/serverconfig"
         SYNC_SKIP_NEWER_IN_DESTINATION = "false"
-        MAINTENANCE_MODE = "true"
+        #MAINTENANCE_MODE = "true"
       }
     }
   }

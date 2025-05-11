@@ -91,7 +91,7 @@ EOH
       }
 
       meta {
-        PACKVERSION = "1.0.7"
+        PACKVERSION = "1.1.5"
       }
 
       env {

@@ -26,9 +26,6 @@ job "mc-router" {
       port "minecraft" {
         static = 25565
       }
-      port "api" {
-        static = 7069
-      }
     }
 
     service {
@@ -46,13 +43,6 @@ job "mc-router" {
       }
     }
 
-    service {
-      name     = "mc-router-api"
-      tags     = ["global", "tcp"]
-      port     = "api"
-      provider = "consul"
-    }
-
     restart {
       attempts = 2
       interval = "30m"
@@ -64,12 +54,9 @@ job "mc-router" {
       driver = "docker"
 
       config {
-        image = "itzg/mc-router"
+        image = "ghcr.io/lobo235/mc-router:feature-sighup"
         ports = ["minecraft"]
         auth_soft_fail = true
-        volumes = [
-          "/mnt/fast/mc-router/:/configs"
-        ]
       }
 
       resources {
@@ -78,15 +65,27 @@ job "mc-router" {
       }
 
       template {
-        data        = <<EOF
-MAPPING={{ $first := true }}{{- range service "mc-router-register.minecraft" }}{{ if $first }}{{ $first = false }}{{ else }},{{ end }}{{ .ServiceMeta.externalServerName }}={{ .Address }}:{{ .Port }}{{ end -}}
+        data = <<EOF
+{
+  "mappings": {
+    {{- $first := true -}}
+    {{- range service "mc-router-register.minecraft" }}
+      {{- if not $first }},{{ end }}
+      "{{ .ServiceMeta.externalServerName }}": "{{ .Address }}:{{ .Port }}"
+      {{- $first = false }}
+    {{- end }}
+  }
+}
 EOF
-        destination = "local/mapping.env"
-        env         = true
+        destination = "local/routes.json"
+        change_mode = "signal"
+        change_signal = "SIGHUP"
       }
 
       env {
-        API_BINDING = ":${NOMAD_PORT_api}"
+        ROUTES_CONFIG = "local/routes.json"
+        DEBUG = "true"
+        TRACE = "true"
       }
     }
   }
