@@ -84,8 +84,6 @@ EOF
 
       env {
         ROUTES_CONFIG = "local/routes.json"
-        DEBUG = "true"
-        TRACE = "true"
       }
     }
   }

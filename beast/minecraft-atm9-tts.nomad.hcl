@@ -1,22 +1,15 @@
 job "mc-atm9-tts" {
   node_pool = "beast"
   datacenters = ["pondside"]
-  type = "service"
+  type = "batch"
 
-  update {
-    max_parallel = 1
-    min_healthy_time = "30s"
-    healthy_deadline = "10m"
-    progress_deadline = "20m"
-    auto_revert = false
-    canary = 0
-  }
-
-  migrate {
-    max_parallel = 1
-    health_check = "checks"
-    min_healthy_time = "30s"
-    healthy_deadline = "10m"
+  periodic {
+    crons = [
+      "30 8 * * *",
+      "30 20 * * *"
+    ]
+    time_zone         = "America/Denver"
+    prohibit_overlap  = true
   }
 
   group "mc-atm9-tts" {
@@ -79,6 +72,7 @@ job "mc-atm9-tts" {
         data        = <<EOH
 {{ with secret "kv/nomad/default/mc-atm9-tts" }}
 CF_API_KEY={{ .Data.data.curseforge_apikey }}
+RCON_PASSWORD={{ .Data.data.rcon_password }}
 {{ end }}
 EOH
         destination = "local/env.txt"
@@ -96,6 +90,7 @@ EOH
 
       env {
         EULA = "TRUE"
+        ENABLE_RCON = "TRUE"
         UID = 1001
         GID = 1001
         SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 - To The Sky v${NOMAD_META_PACKVERSION}"

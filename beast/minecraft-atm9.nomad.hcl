@@ -1,23 +1,22 @@
 job "mc-atm9" {
   node_pool = "beast"
   datacenters = ["pondside"]
-  type = "service"
+  type = "batch"
 
-  update {
-    max_parallel = 1
-    min_healthy_time = "5s"
-    healthy_deadline = "6m"
-    progress_deadline = "10m"
-    health_check = "checks"
-    auto_revert = false
-    canary = 0
+  periodic {
+    crons = [
+      "30 8 * * *",
+      "30 20 * * *"
+    ]
+    time_zone         = "America/Denver"
+    prohibit_overlap  = true
   }
 
-  migrate {
-    max_parallel = 1
-    health_check = "checks"
-    min_healthy_time = "5s"
-    healthy_deadline = "6m"
+  reschedule {
+    attempts = 100
+    delay    = "15s"
+    delay_function = "exponential"
+    max_delay = "5m"
   }
 
   group "mc-atm9" {
@@ -88,6 +87,7 @@ job "mc-atm9" {
         data        = <<EOH
 {{ with secret "kv/nomad/default/mc-atm9" }}
 CF_API_KEY={{ .Data.data.curseforge_apikey }}
+RCON_PASSWORD={{ .Data.data.rcon_password }}
 {{ end }}
 EOH
         destination = "local/env.txt"
@@ -105,6 +105,7 @@ EOH
 
       env {
         EULA = "TRUE"
+        ENABLE_RCON = "TRUE"
         UID = 1001
         GID = 1001
         SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 v${NOMAD_META_PACKVERSION}"
