@@ -54,7 +54,7 @@ job "mc-router" {
       driver = "docker"
 
       config {
-        image = "ghcr.io/lobo235/mc-router:feature-sighup"
+        image = "itzg/mc-router:latest"
         ports = ["minecraft"]
         auth_soft_fail = true
       }
