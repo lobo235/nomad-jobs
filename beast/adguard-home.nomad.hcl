@@ -14,8 +14,17 @@ job "adguard-home" {
     count = 3
 
     network {
+      port "dns" {
+        static   = 53
+      }
+      port "http" {
+        static = 8080
+      }
       port "https" {
-        static = 443
+        static = 8443
+      }
+      port "quic" {
+        static = 853
       }
     }
 
@@ -53,7 +62,7 @@ job "adguard-home" {
         port = "https"
 
         check {
-          name     = "https-port-tcp"
+          name     = "ui_https-port-tcp"
           type     = "http"
           protocol = "https"
           path = "/login.html"
