@@ -12,8 +12,8 @@ job "photoprism" {
     }
 
     update {
-      healthy_deadline = "10m"
-      progress_deadline = "20m"
+      healthy_deadline = "20m"
+      progress_deadline = "30m"
     }
 
     service {
