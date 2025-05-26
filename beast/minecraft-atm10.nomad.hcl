@@ -74,10 +74,15 @@ job "mc-atm10" {
 
       artifact {
         source      = "https://raw.githubusercontent.com/lobo235/nomad-jobs/refs/heads/main/beast/artifacts/atm10-start-custom.sh"
-        destination = "local/"
-        mode        = "file"
         options {
           filename  = "start-custom.sh"
+        }
+      }
+
+      artifact {
+        source      = "https://raw.githubusercontent.com/lobo235/nomad-jobs/refs/heads/main/beast/artifacts/atm10-restore-backup.sh"
+        options {
+          filename  = "restore-backup.sh"
         }
       }
 
