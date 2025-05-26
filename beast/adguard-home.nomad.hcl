@@ -46,8 +46,8 @@ job "adguard-home" {
       }
 
       resources {
-        cpu    = 500
-        memory = 256
+        cpu    = 1500
+        memory = 512
       }
 
       restart {

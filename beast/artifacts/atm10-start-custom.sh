@@ -33,7 +33,7 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
   # Backup critical data
   TIMESTAMP=$(date +%Y%m%d-%H%M%S)
   BACKUP_TEMP_DIR="/data/backups/upgrades/${INSTALLED_VERSION}-${TIMESTAMP}"
-  BACKUP_ARCHIVE="/data/backups/upgrades/${INSTALLED_VERSION}-${TIMESTAMP}.tar.gz"
+  BACKUP_ARCHIVE="/data/backups/upgrades/${INSTALLED_VERSION}-${TIMESTAMP}.tar.zst"
   mkdir -p "$BACKUP_TEMP_DIR"
 
   BACKUP_TARGETS=(
@@ -55,7 +55,7 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
     fi
   done
 
-  tar -czf "$BACKUP_ARCHIVE" -C "$BACKUP_TEMP_DIR" .
+  tar --use-compress-program=pzstd -cf "$BACKUP_ARCHIVE" -C "$BACKUP_TEMP_DIR" .
   rm -rf "$BACKUP_TEMP_DIR"
   echo "✅ Backup completed."
 
@@ -71,7 +71,6 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
   echo "📦 Unpacking $ZIP_FILE..."
   unzip -o "$ZIP_FILE" -d /data
 
-  # Remove any -Xms or -Xmx lines (e.g., -Xms4G, -Xmx12G, etc.)
   sed -i '/^-Xms/d' user_jvm_args.txt
   sed -i '/^-Xmx/d' user_jvm_args.txt
 
@@ -95,7 +94,6 @@ if [ -z "$FORGE_JAR" ] || [ "$LIBS_EXIST" != "yes" ]; then
   echo "   Running NeoForge installer: $NEOFORGE_INSTALLER"
   java -jar "$NEOFORGE_INSTALLER" --installServer
 
-  # After NeoForge install
   NEOFORGE_JAR=$(find libraries/net/neoforged/neoforge -name '*-universal.jar' | head -n 1)
   if [ -n "$NEOFORGE_JAR" ]; then
     echo "✅ Found NeoForge jar at $NEOFORGE_JAR"

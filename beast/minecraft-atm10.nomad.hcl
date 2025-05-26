@@ -93,8 +93,8 @@ EOF
       kill_timeout = "120s"
 
       meta {
-        PACKVERSION      = "2.47"
-        NEOFORGE_VERSION = "21.1.168"
+        PACKVERSION      = "3.0"
+        NEOFORGE_VERSION = "21.1.172"
       }
 
       env {

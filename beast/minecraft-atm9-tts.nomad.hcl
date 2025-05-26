@@ -94,6 +94,7 @@ EOH
         UID = 1001
         GID = 1001
         SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 - To The Sky v${NOMAD_META_PACKVERSION}"
+        ATM9_RESTART = "false"
         MODE = "survival"
         DIFFICULTY = "hard"
         ALLOW_FLIGHT = "TRUE"
