@@ -55,7 +55,6 @@ job "mc-atm10" {
           "/mnt/fast/minecraft/atm10/modpacks:/modpacks",
           "/mnt/fast/minecraft/atm10/mods:/mods",
           "/mnt/fast/minecraft/atm10/downloads:/downloads:ro",
-          "/mnt/fast/minecraft/atm10/start-custom.sh:/start-custom.sh:ro",
           "/mnt/fast/minecraft/atm10/config:/config",
           "/mnt/fast/minecraft/atm10/plugins:/plugins"
         ]
@@ -84,6 +83,7 @@ job "mc-atm10" {
         data = <<EOF
 #!/bin/sh
 chmod +x /local/start-custom.sh
+chmod +x /local/restore-backup.sh
 exec /local/start-custom.sh
 EOF
         destination = "local/entrypoint.sh"
@@ -98,6 +98,7 @@ EOF
       }
 
       env {
+        MAINTENANCE_MODE         = "false"
         EULA                     = "TRUE"
         ENABLE_RCON              = "TRUE"
         RCON_PASSWORD            = "yourStrongPasswordHere"

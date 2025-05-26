@@ -89,6 +89,7 @@ EOH
       }
 
       env {
+        MAINTENANCE_MODE = "false"
         EULA = "TRUE"
         ENABLE_RCON = "TRUE"
         UID = 1001
