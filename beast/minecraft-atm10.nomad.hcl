@@ -1,16 +1,7 @@
 job "mc-atm10" {
   node_pool  = "beast"
   datacenters = ["pondside"]
-  type        = "batch"
-
-  periodic {
-    crons = [
-      "30 8 * * *",
-      "30 20 * * *"
-    ]
-    time_zone         = "America/Denver"
-    prohibit_overlap  = true
-  }
+  type        = "service"
 
   group "mc-atm10" {
     count = 1
@@ -40,7 +31,10 @@ job "mc-atm10" {
     }
 
     restart {
-      attempts = 0
+      attempts = 3
+      interval = "2m"
+      delay    = "15s"
+      mode     = "fail"
     }
 
     vault {
