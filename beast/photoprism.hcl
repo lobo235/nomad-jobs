@@ -56,7 +56,6 @@ job "photoprism" {
         image = "photoprism/photoprism:latest"
         ports = ["https"]
         args = []
-        runtime = "nvidia"
         volumes = [
           "/mnt/photos/originals:/photoprism/originals",
           "/mnt/photos/import:/photoprism/import",
@@ -84,13 +83,11 @@ EOH
         PHOTOPRISM_FFMPEG_SIZE = 7680
         PHOTOPRISM_DISABLE_TLS = false
         PHOTOPRISM_DEFAULT_TLS = true
-        PHOTOPRISM_INIT = "https gpu tensorflow"
+        PHOTOPRISM_INIT = "https tensorflow"
         PHOTOPRISM_UID = 1000
         PHOTOPRISM_GID = 1000
         PHOTOPRISM_UMASK = 0022
         PHOTOPRISM_LOG_LEVEL = "trace"
-        NVIDIA_VISIBLE_DEVICES = "all"
-        NVIDIA_DRIVER_CAPABILITIES = "compute,video,utility"
       }
 
       resources {

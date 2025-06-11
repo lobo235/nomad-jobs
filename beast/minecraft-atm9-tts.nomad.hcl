@@ -1,16 +1,7 @@
 job "mc-atm9-tts" {
-  node_pool = "beast"
+  node_pool = "beast2"
   datacenters = ["pondside"]
-  type = "batch"
-
-  periodic {
-    crons = [
-      "30 8 * * *",
-      "30 20 * * *"
-    ]
-    time_zone         = "America/Denver"
-    prohibit_overlap  = true
-  }
+  type = "service"
 
   group "mc-atm9-tts" {
     count = 1
@@ -41,10 +32,10 @@ job "mc-atm9-tts" {
     }
 
     restart {
-      attempts = 2
-      interval = "30m"
-      delay = "15s"
-      mode = "fail"
+      attempts = 3
+      interval = "2m"
+      delay    = "15s"
+      mode     = "fail"
     }
 
     vault {

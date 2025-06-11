@@ -1,23 +1,7 @@
 job "mc-atm9" {
-  node_pool = "beast"
+  node_pool = "beast2"
   datacenters = ["pondside"]
-  type = "batch"
-
-  periodic {
-    crons = [
-      "30 8 * * *",
-      "30 20 * * *"
-    ]
-    time_zone         = "America/Denver"
-    prohibit_overlap  = true
-  }
-
-  reschedule {
-    attempts = 100
-    delay    = "15s"
-    delay_function = "exponential"
-    max_delay = "5m"
-  }
+  type = "service"
 
   group "mc-atm9" {
     count = 1
@@ -56,10 +40,10 @@ job "mc-atm9" {
     }
 
     restart {
-      attempts = 15
-      interval = "30m"
-      delay = "15s"
-      mode = "delay"
+      attempts = 3
+      interval = "2m"
+      delay    = "15s"
+      mode     = "fail"
     }
 
     vault {
@@ -95,7 +79,7 @@ EOH
       }
 
       resources {
-        cpu        = 36000
+        cpu        = 28000
         memory     = 16384  # 16GB
       }
 

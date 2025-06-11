@@ -66,37 +66,6 @@ EOH
         change_mode = "restart"
       }
     }
-    task "netlobo-linodedyndns-ns1.big" {
-      driver = "docker"
-
-      config {
-        image = "bpexp235/netlobo-linodedyndns:latest"
-        # The "auth_soft_fail" configuration instructs Nomad to try public
-        # repositories if the task fails to authenticate when pulling images
-        # and the Docker driver has an "auth" configuration block.
-        auth_soft_fail = true
-      }
-
-      resources {
-        cpu        = 100 # 100MHz
-        memory     = 64 # 64M
-      }
-
-      env {
-        DOMAIN_NAME = "netlobo.com"
-        A_RECORD = "ns1.big"
-      }
-
-      template {
-        data = <<EOH
-LINODE_API_KEY={{ with secret "kv/nomad/default/netlobo-linodedyndns" }}{{ .Data.data.linode_api_key }}{{ end }}
-EOH
- 
-        env         = true
-        destination = "${NOMAD_SECRETS_DIR}/netlobo-linodedyndns.env"
-        change_mode = "restart"
-      }
-    }
     task "netlobo-linodedyndns-big" {
       driver = "docker"
 

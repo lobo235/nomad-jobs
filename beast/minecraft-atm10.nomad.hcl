@@ -1,5 +1,5 @@
 job "mc-atm10" {
-  node_pool  = "beast"
+  node_pool  = "beast2"
   datacenters = ["pondside"]
   type        = "service"
 
@@ -61,8 +61,8 @@ job "mc-atm10" {
       }
 
       resources {
-        cpu    = 36000
-        memory = 16384
+        cpu    = 21000
+        memory = 8192
       }
 
       artifact {
@@ -93,8 +93,8 @@ EOF
       kill_timeout = "120s"
 
       meta {
-        PACKVERSION      = "3.0"
-        NEOFORGE_VERSION = "21.1.172"
+        PACKVERSION      = "3.2"
+        NEOFORGE_VERSION = "21.1.174"
       }
 
       env {
@@ -121,7 +121,7 @@ EOF
         VERSION                 = "1.21.1"
         PACKVERSION             = "${NOMAD_META_PACKVERSION}"
         INIT_MEMORY             = "4G"
-        MAX_MEMORY              = "14G"
+        MAX_MEMORY              = "7G"
         MAX_WORLD_SIZE          = 16016
         MAX_TICK_TIME           = 180000
         COPY_CONFIG_DEST        = "/data/world/serverconfig"

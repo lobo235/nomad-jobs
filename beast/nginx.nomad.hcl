@@ -95,10 +95,12 @@ job "nginx" {
 
       config {
         image = "linuxserver/nginx:latest"
-        ports = ["nginx", "nginx_secure"]
+        ports = ["nginx", "nginx-secure"]
         auth_soft_fail = true
+        network_mode = "bridge"
         volumes = [
           "/mnt/fast/nginx/config:/config",
+          "/mnt/fast/nginx/web:/app/www/public",
           "local/scripts:/custom-cont-init.d"
         ]
       }
@@ -196,6 +198,17 @@ server {
           access_log off;
           add_header 'Content-Type' 'application/json';
           return 200 '{"status":"UP"}';
+        }
+
+        location /downloads/ {
+            root /app/www/public;
+
+            auth_basic "Restricted Area";
+            auth_basic_user_file /config/nginx/.htpasswd;
+
+            autoindex on;
+            autoindex_exact_size off;
+            autoindex_localtime on;
         }
 
         location / {

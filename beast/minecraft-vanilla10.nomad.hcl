@@ -1,5 +1,5 @@
 job "mc-vanilla10" {
-  node_pool = "beast"
+  node_pool = "beast2"
   datacenters = ["pondside"]
   type = "service"
 
