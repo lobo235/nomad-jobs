@@ -1,4 +1,4 @@
-job "mc-vanilla12" {
+job "mc-vanilla15" {
   node_pool = "beast"
   datacenters = ["pondside"]
   type = "service"
@@ -19,7 +19,7 @@ job "mc-vanilla12" {
     healthy_deadline = "10m"
   }
 
-  group "mc-vanilla12" {
+  group "mc-vanilla15" {
     count = 1
 
     network {
@@ -30,12 +30,12 @@ job "mc-vanilla12" {
 
     service {
       name     = "minecraft"
-      tags     = ["global", "minecraft", "tcp", "vanilla12", "mc-router-register"]
+      tags     = ["global", "minecraft", "tcp", "vanilla15", "mc-router-register"]
       port     = "minecraft"
       provider = "consul"
       meta {
         mc-router-register = "true"
-        externalServerName = "vanilla12.big.netlobo.com"
+        externalServerName = "vanilla15.big.netlobo.com"
       }
 
       check {
@@ -58,7 +58,7 @@ job "mc-vanilla12" {
       size = 300
     }
 
-    task "mc-vanilla12" {
+    task "mc-vanilla15" {
       driver = "docker"
 
       config {
@@ -66,28 +66,28 @@ job "mc-vanilla12" {
         ports = ["minecraft"]
         auth_soft_fail = true
         volumes = [
-          "/mnt/fast/minecraft/vanilla12/data:/data"
+          "/mnt/fast/minecraft/vanilla15/data:/data"
         ]
       }
 
       resources {
         cpu        = 8000
-        memory     = 4096  # 4GB
+        memory     = 5120  # 5GB
       }
 
       env {
         EULA = "TRUE"
         UID = 1001
         GID = 1001
-        SERVER_NAME = "Barlow Craft - Vanilla12"
+        SERVER_NAME = "Barlow Craft - vanilla15"
         MODE = "survival"
         DIFFICULTY = "hard"
         VIEW_DISTANCE = 6
         MAX_PLAYERS = 20
-        SEED = "Barlow Craft - Vanilla12-1"
+        SEED = "Barlow Craft - vanilla15"
         OPS = "netlobo"
-        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aVanilla12"
-        MAX_MEMORY = "3G"
+        MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7avanilla15"
+        MAX_MEMORY = "4G"
       }
     }
   }

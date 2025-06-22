@@ -86,5 +86,9 @@ EOF
         ROUTES_CONFIG = "local/routes.json"
       }
     }
+		constraint {
+      attribute = "${meta.nvidia_gpu}"
+      value     = "true"
+    }
   }
 }

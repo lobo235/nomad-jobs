@@ -29,7 +29,6 @@ job "sabnzbd" {
       port "sabnzbd_tls" {
         to = 9090
       }
-      mode = "bridge"
     }
 
     service {
@@ -72,7 +71,6 @@ job "sabnzbd" {
       driver = "docker"
       config {
         image = "linuxserver/sabnzbd:latest"
-        network_mode = "bridge"
         ports = ["sabnzbd","sabnzbd_tls"]
         auth_soft_fail = true
         volumes = [

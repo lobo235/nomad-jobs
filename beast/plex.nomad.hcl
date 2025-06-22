@@ -2,6 +2,7 @@ job "plex" {
   node_pool = "beast"
   datacenters = ["pondside"]
   type = "service"
+  priority = 90
 
   update {
     max_parallel = 1
@@ -71,7 +72,7 @@ job "plex" {
         image = "linuxserver/plex:latest"
         network_mode = "host"
         ports = ["plex"]
-        runtime = "nvidia"
+        #runtime = "nvidia"
         auth_soft_fail = true
         volumes = [
           "/mnt/fast/plex/config:/config",
@@ -87,20 +88,29 @@ job "plex" {
           "/mnt/plex/music:/music2",
           "/mnt/fast/plex/transcode:/transcode"
         ]
+        
+        # Pass the GPU device
+        devices = [
+          {
+            host_path      = "/dev/dri"
+            container_path = "/dev/dri"
+          }
+        ]
       }
 
       resources {
         cpu        = 24000
-        memory     = 32768  # 32GB
-        
-        device "nvidia/gpu" {
-          count = 1
-        }
+        memory     = 16384  # 16GB
+      }
+      
+      constraint {
+        attribute = "${meta.intel_gpu}"
+        value     = "true"
       }
 
       env {
-        NVIDIA_VISIBLE_DEVICES = "all"
-        NVIDIA_DRIVER_CAPABILITIES = "compute,video,utility"
+        #NVIDIA_VISIBLE_DEVICES = "all"
+        #NVIDIA_DRIVER_CAPABILITIES = "compute,video,utility"
         PUID = 1002
         PGID = 1002
         VERSION = "docker"

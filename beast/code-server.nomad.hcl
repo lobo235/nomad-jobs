@@ -95,7 +95,7 @@ job "code-server" {
         data = <<EOH
 PASSWORD={{ with secret "kv/nomad/default/code-server" }}{{ .Data.data.password }}{{ end }}
 EOH
- 
+
         env         = true
         destination = "${NOMAD_SECRETS_DIR}/code-server.env"
         change_mode = "restart"

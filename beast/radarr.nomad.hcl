@@ -26,7 +26,6 @@ job "radarr" {
       port "radarr" {
         to = 7878
       }
-      mode = "bridge"
     }
 
     service {
@@ -70,7 +69,6 @@ job "radarr" {
 
       config {
         image = "linuxserver/radarr:latest"
-        network_mode = "bridge"
         ports = ["radarr"]
         auth_soft_fail = true
         volumes = [

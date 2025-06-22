@@ -1,5 +1,5 @@
 job "mc-bedrock3" {
-  node_pool = "beast2"
+  node_pool = "beast"
   datacenters = ["pondside"]
   type = "service"
 

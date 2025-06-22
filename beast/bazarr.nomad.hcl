@@ -26,7 +26,6 @@ job "bazarr" {
       port "bazarr" {
         to = 6767
       }
-      mode = "bridge"
     }
 
     service {
@@ -70,7 +69,6 @@ job "bazarr" {
 
       config {
         image = "linuxserver/bazarr:latest"
-        network_mode = "bridge"
         ports = ["bazarr"]
         auth_soft_fail = true
         volumes = [

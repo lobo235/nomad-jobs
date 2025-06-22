@@ -12,8 +12,8 @@ job "photoprism" {
     }
 
     update {
-      healthy_deadline = "20m"
-      progress_deadline = "30m"
+      healthy_deadline = "45m"
+      progress_deadline = "60m"
     }
 
     service {
@@ -38,7 +38,7 @@ job "photoprism" {
         timeout = "20s"
 
         check_restart {
-          limit = 3
+          limit = 15
           grace = "2m"
         }
       }
@@ -61,6 +61,14 @@ job "photoprism" {
           "/mnt/photos/import:/photoprism/import",
           "/mnt/fast/photoprism:/photoprism/storage"
         ]
+        
+        # Pass the GPU device
+        devices = [
+          {
+            host_path      = "/dev/dri"
+            container_path = "/dev/dri"
+          }
+        ]
       }
 
       template {
@@ -79,21 +87,27 @@ EOH
         PHOTOPRISM_SITE_URL = "https://photoprism.big.netlobo.com/"
         PHOTOPRISM_ORIGINALS_LIMIT = 20000
         PHOTOPRISM_DATABASE_SERVER = "mariadb.big.netlobo.com:3306"
-        PHOTOPRISM_FFMPEG_ENCODER = "nvidia"
+        PHOTOPRISM_FFMPEG_ENCODER = "intel"
         PHOTOPRISM_FFMPEG_SIZE = 7680
         PHOTOPRISM_DISABLE_TLS = false
         PHOTOPRISM_DEFAULT_TLS = true
-        PHOTOPRISM_INIT = "https tensorflow"
+        PHOTOPRISM_INIT = "https tensorflow intel gpu"
         PHOTOPRISM_UID = 1000
         PHOTOPRISM_GID = 1000
         PHOTOPRISM_UMASK = 0022
         PHOTOPRISM_LOG_LEVEL = "trace"
+        PHOTOPRISM_DISABLE_CHOWN = true
       }
 
       resources {
         cpu        = 6000
         memory     = 16384  # 16GB
       }
+    }
+    constraint {
+      attribute = "${meta.intel_gpu}"
+      operator  = "="
+      value     = "true"
     }
   }
 }

@@ -16,7 +16,6 @@ job "nginx" {
     count = 1
 
     network {
-      mode = "bridge"
       port "nginx" {
         to = 80
       }
@@ -97,7 +96,6 @@ job "nginx" {
         image = "linuxserver/nginx:latest"
         ports = ["nginx", "nginx-secure"]
         auth_soft_fail = true
-        network_mode = "bridge"
         volumes = [
           "/mnt/fast/nginx/config:/config",
           "/mnt/fast/nginx/web:/app/www/public",
@@ -166,7 +164,7 @@ server {
 
         include /config/nginx/ssl.conf;
 
-        set $plex http://10.77.3.9:32400;
+        set $plex http://plex.service.consul:32400;
 
         gzip on;
         gzip_vary on;

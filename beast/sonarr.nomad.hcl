@@ -26,7 +26,6 @@ job "sonarr" {
       port "sonarr" {
         to = 8989
       }
-      mode = "bridge"
     }
 
     service {
@@ -70,7 +69,6 @@ job "sonarr" {
 
       config {
         image = "linuxserver/sonarr:latest"
-        network_mode = "bridge"
         ports = ["sonarr"]
         # The "auth_soft_fail" configuration instructs Nomad to try public
         # repositories if the task fails to authenticate when pulling images

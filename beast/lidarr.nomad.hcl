@@ -26,7 +26,6 @@ job "lidarr" {
       port "lidarr" {
         to = 8686
       }
-      mode = "bridge"
     }
 
     service {
@@ -70,7 +69,6 @@ job "lidarr" {
 
       config {
         image = "linuxserver/lidarr:latest"
-        network_mode = "bridge"
         ports = ["lidarr"]
         auth_soft_fail = true
         volumes = [
