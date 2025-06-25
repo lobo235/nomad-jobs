@@ -52,18 +52,21 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
   )
 
   log "🗄️  Backing up important data to $BACKUP_ARCHIVE..."
+  backup_start=$(date +%s)
 
   for item in "${BACKUP_TARGETS[@]}"; do
     if [ -e "$item" ]; then
       log "📁 Backing up: $item"
       if [ -d "$item" ]; then
         mkdir -p "$BACKUP_TEMP_DIR/$item"
+        total_size=$(du -sh "$item" | cut -f1)
+
         rsync -a -h "$item"/ "$BACKUP_TEMP_DIR/$item/" &
         RSYNC_PID=$!
 
         while kill -0 "$RSYNC_PID" 2>/dev/null; do
-          size=$(du -sh "$BACKUP_TEMP_DIR/$item" | cut -f1)
-          log "📏 Rsync progress for $item: $size copied so far..."
+          copied_size=$(du -sh "$BACKUP_TEMP_DIR/$item" | cut -f1)
+          log "📏 Rsync progress for $item: $copied_size / $total_size copied..."
           sleep 10
         done
 
@@ -86,17 +89,22 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
     fi
   done
 
-  log "✅ File copy complete. Proceeding to archive."
+  backup_end=$(date +%s)
+  backup_duration=$((backup_end - backup_start))
+  log "✅ File copy complete. Backup completed in ${backup_duration}s."
 
   log "🗜️  Creating compressed archive..."
+  archive_start=$(date +%s)
+
+  total_uncompressed=$(du -sh "$BACKUP_TEMP_DIR" | cut -f1)
 
   tar --use-compress-program=pzstd -cf "$BACKUP_ARCHIVE" -C "$BACKUP_TEMP_DIR" . &
   TAR_PID=$!
 
   while kill -0 "$TAR_PID" 2>/dev/null; do
     if [ -f "$BACKUP_ARCHIVE" ]; then
-      size=$(du -sh "$BACKUP_ARCHIVE" | cut -f1)
-      log "📏 Archive size so far: $size"
+      archive_size=$(du -sh "$BACKUP_ARCHIVE" | cut -f1)
+      log "📏 Archive size so far: $archive_size (compressed) / $total_uncompressed (uncompressed)"
     else
       log "⌛ Waiting for archive to be created..."
     fi
@@ -111,8 +119,11 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
     exit 1
   fi
 
-  size=$(du -sh "$BACKUP_ARCHIVE" | cut -f1)
-  log "✅ Backup completed. Final archive size: $size"
+  archive_end=$(date +%s)
+  archive_duration=$((archive_end - archive_start))
+  final_size=$(du -sh "$BACKUP_ARCHIVE" | cut -f1)
+  log "✅ Backup completed. Final archive size: $final_size (compressed) / $total_uncompressed (uncompressed)"
+  log "✅ Archive completed in ${archive_duration}s."
 
   log "🧹 Cleaning up temporary backup directory..."
   rm -rf "$BACKUP_TEMP_DIR"
