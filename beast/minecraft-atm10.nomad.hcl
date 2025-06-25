@@ -98,7 +98,7 @@ EOF
       }
 
       env {
-        MAINTENANCE_MODE         = "false"
+        MAINTENANCE_MODE         = "true"
         EULA                     = "TRUE"
         ENABLE_RCON              = "TRUE"
         RCON_PASSWORD            = "yourStrongPasswordHere"

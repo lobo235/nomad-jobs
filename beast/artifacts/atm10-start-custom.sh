@@ -52,15 +52,51 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
   )
 
   log "🗄️  Backing up important data to $BACKUP_ARCHIVE..."
+
   for item in "${BACKUP_TARGETS[@]}"; do
     if [ -e "$item" ]; then
-      cp -r "$item" "$BACKUP_TEMP_DIR/"
+      log "📁 Backing up: $item"
+      if [ -d "$item" ]; then
+        rsync -a -h --info=progress2 "$item"/ "$BACKUP_TEMP_DIR/$item/"
+      else
+        mkdir -p "$(dirname "$BACKUP_TEMP_DIR/$item")"
+        rsync -a -h --info=progress2 "$item" "$BACKUP_TEMP_DIR/$item"
+      fi
+    else
+      log "⚠️  Skipped (not found): $item"
     fi
   done
 
-  tar --use-compress-program=pzstd -cf "$BACKUP_ARCHIVE" -C "$BACKUP_TEMP_DIR" .
+  log "✅ File copy complete. Proceeding to archive."
+
+  log "🗜️  Creating compressed archive..."
+
+  tar --use-compress-program=pzstd -cf "$BACKUP_ARCHIVE" -C "$BACKUP_TEMP_DIR" . &
+  TAR_PID=$!
+
+  while kill -0 "$TAR_PID" 2>/dev/null; do
+    if [ -f "$BACKUP_ARCHIVE" ]; then
+      size=$(du -sh "$BACKUP_ARCHIVE" | cut -f1)
+      log "📏 Archive size so far: $size"
+    else
+      log "⌛ Waiting for archive to be created..."
+    fi
+    sleep 10
+  done
+
+  wait "$TAR_PID"
+  ARCHIVE_EXIT=$?
+
+  if [ $ARCHIVE_EXIT -ne 0 ]; then
+    log "❌ Archive creation failed with exit code $ARCHIVE_EXIT"
+    exit 1
+  fi
+
+  size=$(du -sh "$BACKUP_ARCHIVE" | cut -f1)
+  log "✅ Backup completed. Final archive size: $size"
+
+  log "🧹 Cleaning up temporary backup directory..."
   rm -rf "$BACKUP_TEMP_DIR"
-  log "✅ Backup completed."
 
   log "🧹 Cleaning old server files..."
   find . -mindepth 1 -maxdepth 1 \
