@@ -57,10 +57,29 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
     if [ -e "$item" ]; then
       log "📁 Backing up: $item"
       if [ -d "$item" ]; then
-        rsync -a -h --info=progress2 "$item"/ "$BACKUP_TEMP_DIR/$item/"
+        mkdir -p "$BACKUP_TEMP_DIR/$item"
+        rsync -a -h "$item"/ "$BACKUP_TEMP_DIR/$item/" &
+        RSYNC_PID=$!
+
+        while kill -0 "$RSYNC_PID" 2>/dev/null; do
+          size=$(du -sh "$BACKUP_TEMP_DIR/$item" | cut -f1)
+          log "📏 Rsync progress for $item: $size copied so far..."
+          sleep 10
+        done
+
+        wait "$RSYNC_PID"
+        RSYNC_EXIT=$?
+
+        if [ $RSYNC_EXIT -ne 0 ]; then
+          log "❌ Rsync failed for $item with exit code $RSYNC_EXIT"
+          exit 1
+        fi
+
+        log "✅ Finished rsync for $item"
       else
         mkdir -p "$(dirname "$BACKUP_TEMP_DIR/$item")"
-        rsync -a -h --info=progress2 "$item" "$BACKUP_TEMP_DIR/$item"
+        rsync -a -h "$item" "$BACKUP_TEMP_DIR/$item" >/dev/null
+        log "✅ Copied file: $item"
       fi
     else
       log "⚠️  Skipped (not found): $item"
