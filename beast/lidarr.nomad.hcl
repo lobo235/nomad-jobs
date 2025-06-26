@@ -91,5 +91,10 @@ job "lidarr" {
         UMASK = "022"
       }
     }
+    affinity {
+      attribute = "${meta.fast_cpu}"
+      value     = "true"
+      weight    = 100
+    }
   }
 }

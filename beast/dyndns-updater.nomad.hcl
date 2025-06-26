@@ -51,5 +51,10 @@ job "dyndns-updater" {
         tags     = ["dyndns"]
       }
     }
+    affinity {
+      attribute = "${meta.fast_cpu}"
+      value     = "true"
+      weight    = 100
+    }
   }
 }

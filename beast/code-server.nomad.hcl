@@ -26,7 +26,6 @@ job "code-server" {
       port "code-server" {
         to = 8443
       }
-      mode = "bridge"
     }
 
     service {
@@ -71,7 +70,6 @@ job "code-server" {
 
       config {
         image = "linuxserver/code-server:latest"
-        network_mode = "bridge"
         ports = ["code-server"]
         auth_soft_fail = true
         volumes = [
@@ -100,6 +98,11 @@ EOH
         destination = "${NOMAD_SECRETS_DIR}/code-server.env"
         change_mode = "restart"
       }
+    }
+    affinity {
+      attribute = "${meta.fast_cpu}"
+      value     = "true"
+      weight    = 100
     }
   }
 }

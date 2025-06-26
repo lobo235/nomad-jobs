@@ -90,5 +90,10 @@ job "mc-vanilla13" {
         MAX_MEMORY = "4G"
       }
     }
+    affinity {
+      attribute = "${meta.fast_cpu}"
+      value     = "true"
+      weight    = 100
+    }
   }
 }

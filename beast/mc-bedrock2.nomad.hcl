@@ -87,5 +87,10 @@ job "mc-bedrock2" {
         VERSION = "LATEST"
       }
     }
+    affinity {
+      attribute = "${meta.fast_cpu}"
+      value     = "true"
+      weight    = 100
+    }
   }
 }

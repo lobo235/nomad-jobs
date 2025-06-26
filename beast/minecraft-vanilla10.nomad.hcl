@@ -72,7 +72,6 @@ job "mc-vanilla10" {
       resources {
         cores      = 3
         memory     = 2560  # 2.5GB
-        memory_max = 3072  # 3GB
       }
 
       env {
@@ -89,6 +88,11 @@ job "mc-vanilla10" {
         MOTD = "\u00a7f-\u00a78=\u00a7cB\u00a7ba\u00a7er\u00a7al\u00a79o\u00a76w \u00a7dC\u00a7cr\u00a7ba\u00a7ef\u00a7at\u00a78=\u00a7f- \u00a7aVanilla10"
         MAX_MEMORY = "2G"
       }
+    }
+    affinity {
+      attribute = "${meta.fast_cpu}"
+      value     = "true"
+      weight    = 100
     }
   }
 }
