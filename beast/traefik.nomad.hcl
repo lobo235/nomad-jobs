@@ -67,8 +67,12 @@ job "traefik" {
 entryPoints:
   web:
     address: ":81"
+    forwardedHeaders:
+      insecure: true
   websecure:
     address: ":444"
+    forwardedHeaders:
+      insecure: true
     transport:
       respondingTimeouts:
         readTimeout: 600
