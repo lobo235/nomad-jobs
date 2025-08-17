@@ -140,7 +140,7 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
   log "📦 Unpacking $ZIP_FILE..."
   unzip -o "$ZIP_FILE" -d /data
 
-  # Remove Xms/Xmx overrides if present
+  # JVM cleanup if file exists
   if [ -f user_jvm_args.txt ]; then
     sed -i '/^-Xms/d' user_jvm_args.txt
     sed -i '/^-Xmx/d' user_jvm_args.txt
@@ -153,18 +153,18 @@ else
   log "✅ ServerFiles-${PACKVERSION} already unpacked and active."
 fi
 
-# Check if NeoForge is already installed
-FORGE_JAR=$(find libraries -name 'neoforge-*-universal.jar' | head -n 1)
-LIBS_EXIST=$(test -d libraries && echo yes || echo no)
-
-# Only run NeoForge installation for ATM10.
-# ATM10 To The Sky (ATM10-TTS) installs NeoForge as part of its own startserver.sh
+# Only run NeoForge installation for classic ATM10. ATM10-TTS auto-installs.
 if [ "${NOMAD_META_ATM_PACK_TYPE}" != "ATM10" ]; then
   log "📦 Pack type ${NOMAD_META_ATM_PACK_TYPE} detected — skipping custom NeoForge install logic."
 else
-  # Check if NeoForge is already installed
-  FORGE_JAR=$(find libraries -name 'neoforge-*-universal.jar' | head -n 1)
-  LIBS_EXIST=$(test -d libraries && echo yes || echo no)
+  # Safe NeoForge detection even if libraries folder doesn't exist
+  if [ -d libraries ]; then
+    FORGE_JAR=$(find libraries -name 'neoforge-*-universal.jar' | head -n 1)
+    LIBS_EXIST=yes
+  else
+    FORGE_JAR=""
+    LIBS_EXIST=no
+  fi
 
   if [ -z "$FORGE_JAR" ] || [ "$LIBS_EXIST" != "yes" ]; then
     NEOFORGE_INSTALLER=$(find . -name 'neoforge-*-installer.jar' | head -n 1)
@@ -191,7 +191,6 @@ else
   fi
 fi
 
-
 log "📦 Fixing file permissions"
 chown -R 1001:1001 /data
 
@@ -199,6 +198,14 @@ if [ "${MAINTENANCE_MODE:-false}" = "true" ]; then
   log "🛠 MAINTENANCE_MODE is enabled. Skipping server startup."
   log "📂 You can now exec into the container for maintenance."
   tail -f /dev/null
+fi
+
+# JVM cleanup again on runtime if file exists (covers ATM10-TTS)
+if [ -f user_jvm_args.txt ]; then
+  sed -i '/^-Xms/d' user_jvm_args.txt
+  sed -i '/^-Xmx/d' user_jvm_args.txt
+else
+  log "⚠️  user_jvm_args.txt not found — skipping JVM arg cleanup."
 fi
 
 log "🚀 Handoff to default /start script..."
