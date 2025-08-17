@@ -94,11 +94,12 @@ EOF
 
       meta {
         PACKVERSION      = "4.2"
+        ATM_PACK_TYPE    = "ATM10"
         NEOFORGE_VERSION = "21.1.185"
       }
 
       env {
-        MAINTENANCE_MODE         = "true"
+        MAINTENANCE_MODE         = "false"
         EULA                     = "TRUE"
         ENABLE_RCON              = "TRUE"
         RCON_PASSWORD            = "yourStrongPasswordHere"

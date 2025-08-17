@@ -157,29 +157,40 @@ fi
 FORGE_JAR=$(find libraries -name 'neoforge-*-universal.jar' | head -n 1)
 LIBS_EXIST=$(test -d libraries && echo yes || echo no)
 
-if [ -z "$FORGE_JAR" ] || [ "$LIBS_EXIST" != "yes" ]; then
-  NEOFORGE_INSTALLER=$(find . -name 'neoforge-*-installer.jar' | head -n 1)
-
-  if [ -z "$NEOFORGE_INSTALLER" ]; then
-    log "❌ NeoForge installer not found!"
-    exit 1
-  fi
-
-  log "   Running NeoForge installer: $NEOFORGE_INSTALLER"
-  java -jar "$NEOFORGE_INSTALLER" --installServer
-
-  NEOFORGE_JAR=$(find libraries/net/neoforged/neoforge -name '*-universal.jar' | head -n 1)
-  if [ -n "$NEOFORGE_JAR" ]; then
-    log "✅ Found NeoForge jar at $NEOFORGE_JAR"
-    log "📦 Copying to /data/server.jar"
-    cp "$NEOFORGE_JAR" ./server.jar
-  else
-    log "❌ Could not locate NeoForge universal jar!"
-    exit 1
-  fi
+# Only run NeoForge installation for ATM10.
+# ATM10 To The Sky (ATM10-TTS) installs NeoForge as part of its own startserver.sh
+if [ "${NOMAD_META_ATM_PACK_TYPE}" != "ATM10" ]; then
+  log "📦 Pack type ${NOMAD_META_ATM_PACK_TYPE} detected — skipping custom NeoForge install logic."
 else
-  log "✅ NeoForge is already installed. Skipping install."
+  # Check if NeoForge is already installed
+  FORGE_JAR=$(find libraries -name 'neoforge-*-universal.jar' | head -n 1)
+  LIBS_EXIST=$(test -d libraries && echo yes || echo no)
+
+  if [ -z "$FORGE_JAR" ] || [ "$LIBS_EXIST" != "yes" ]; then
+    NEOFORGE_INSTALLER=$(find . -name 'neoforge-*-installer.jar' | head -n 1)
+
+    if [ -z "$NEOFORGE_INSTALLER" ]; then
+      log "❌ NeoForge installer not found!"
+      exit 1
+    fi
+
+    log "   Running NeoForge installer: $NEOFORGE_INSTALLER"
+    java -jar "$NEOFORGE_INSTALLER" --installServer
+
+    NEOFORGE_JAR=$(find libraries/net/neoforged/neoforge -name '*-universal.jar' | head -n 1)
+    if [ -n "$NEOFORGE_JAR" ]; then
+      log "✅ Found NeoForge jar at $NEOFORGE_JAR"
+      log "📦 Copying to /data/server.jar"
+      cp "$NEOFORGE_JAR" ./server.jar
+    else
+      log "❌ Could not locate NeoForge universal jar!"
+      exit 1
+    fi
+  else
+    log "✅ NeoForge is already installed. Skipping install."
+  fi
 fi
+
 
 log "📦 Fixing file permissions"
 chown -R 1001:1001 /data
