@@ -140,8 +140,13 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
   log "📦 Unpacking $ZIP_FILE..."
   unzip -o "$ZIP_FILE" -d /data
 
-  sed -i '/^-Xms/d' user_jvm_args.txt
-  sed -i '/^-Xmx/d' user_jvm_args.txt
+  # Remove Xms/Xmx overrides if present
+  if [ -f user_jvm_args.txt ]; then
+    sed -i '/^-Xms/d' user_jvm_args.txt
+    sed -i '/^-Xmx/d' user_jvm_args.txt
+  else
+    log "⚠️  user_jvm_args.txt not found — skipping JVM arg cleanup."
+  fi
 
   echo "$PACKVERSION" > .packversion
 else
