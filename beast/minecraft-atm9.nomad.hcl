@@ -110,6 +110,8 @@ EOF
       }
 
       env {
+        PACKVERSION = "${NOMAD_META_PACKVERSION}"
+        CUSTOM_SERVER = "/data/startserver.sh"
         MAINTENANCE_MODE = "false"
         EULA = "TRUE"
         ENABLE_RCON = "TRUE"
