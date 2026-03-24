@@ -14,12 +14,12 @@ if [ -z "$PACKVERSION" ]; then
   exit 1
 fi
 
-ZIP_FILE="/downloads/ServerFiles-${PACKVERSION}.zip"
+ZIP_FILE="/downloads/Server-Files-${PACKVERSION}.zip"
 
 if [ ! -f "$ZIP_FILE" ]; then
   log "❌ Expected file not found: $ZIP_FILE"
   log "📁 Available files in /downloads:"
-  ls -1 /downloads/ServerFiles-*.zip || log "(none)"
+  ls -1 /downloads/Server-Files-*.zip || log "(none)"
   exit 1
 fi
 
@@ -130,7 +130,7 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
 
   log "🧹 Cleaning old server files..."
   find . -mindepth 1 -maxdepth 1 \
-    ! -name "ServerFiles-${PACKVERSION}.zip" \
+    ! -name "Server-Files-${PACKVERSION}.zip" \
     ! -name ".packversion" \
     ! -name "backups" \
     ! -name "world" \
@@ -150,7 +150,7 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
 
   echo "$PACKVERSION" > .packversion
 else
-  log "✅ ServerFiles-${PACKVERSION} already unpacked and active."
+  log "✅ Server-Files-${PACKVERSION} already unpacked and active."
 fi
 
 log "📦 Fixing file permissions"
