@@ -65,7 +65,7 @@ job "mc-atm9" {
       driver = "docker"
 
       config {
-        image = "itzg/minecraft-server"
+        image = "itzg/minecraft-server:java17"
         entrypoint = ["/local/entrypoint.sh"]
         ports = ["minecraft", "rcon"]
         auth_soft_fail = true
@@ -81,7 +81,7 @@ job "mc-atm9" {
 
       template {
         data = <<EOF
-{{ with secret "kv/nomad/default/mc-atm9" }}
+{{ with secret "kv/data/nomad/default/mc-atm9" }}
 RCON_PASSWORD={{ .Data.data.rcon_password }}
 {{ end }}
 EOF
@@ -124,12 +124,13 @@ EOF
       meta {
         PACKVERSION   = "1.0.8"
         ATM_PACK_TYPE = "ATM9"
-        FORGE_VERSION = "47.4.0"   # confirm exact version from the server pack
+        FORGE_VERSION = "47.4.0"
+        MC_VERSION    = "1.20.1"
       }
 
       env {
         PACKVERSION = "${NOMAD_META_PACKVERSION}"
-        CUSTOM_JAR_EXEC = "@user_jvm_args.txt @libraries/net/minecraftforge/forge/${NOMAD_META_FORGE_VERSION}/unix_args.txt nogui"
+        CUSTOM_JAR_EXEC = "@/data/user_jvm_args.txt @/data/libraries/net/minecraftforge/forge/${NOMAD_META_MC_VERSION}-${NOMAD_META_FORGE_VERSION}/unix_args.txt nogui"
         MAINTENANCE_MODE = "false"
         EULA = "TRUE"
         ENABLE_RCON = "TRUE"
