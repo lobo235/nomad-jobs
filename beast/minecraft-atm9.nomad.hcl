@@ -106,17 +106,20 @@ EOF
       kill_timeout = "120s"
 
       meta {
-        PACKVERSION = "1.0.8"
+        PACKVERSION   = "1.0.8"
+        ATM_PACK_TYPE = "ATM9"
+        FORGE_VERSION = "47.4.0"   # confirm exact version from the server pack
       }
 
       env {
         PACKVERSION = "${NOMAD_META_PACKVERSION}"
-        CUSTOM_SERVER = "/data/startserver.sh"
+        CUSTOM_JAR_EXEC = "@user_jvm_args.txt @libraries/net/minecraftforge/forge/${NOMAD_META_FORGE_VERSION}/unix_args.txt nogui"
         MAINTENANCE_MODE = "false"
         EULA = "TRUE"
         ENABLE_RCON = "TRUE"
         UID = 1001
         GID = 1001
+        TZ = "America/Denver"
         SERVER_NAME = "§f-§8=§cB§ba§er§al§9o§6w §dC§cr§ba§ef§at§8=§f- §aATM9 v${NOMAD_META_PACKVERSION}"
         MODE = "survival"
         DIFFICULTY = "hard"

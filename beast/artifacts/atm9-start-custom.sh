@@ -140,13 +140,13 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
   log "📦 Unpacking $ZIP_FILE..."
   unzip -o "$ZIP_FILE" -d /data
 
-# Flatten single top-level directory if present
-EXTRACTED=$(ls -d /data/*/  2>/dev/null | head -1)
-if [ -n "$EXTRACTED" ] && [ "$(ls -d /data/*/ | wc -l)" -eq 1 ]; then
-  mv "$EXTRACTED"* /data/
-  mv "$EXTRACTED".[!.]* /data/ 2>/dev/null || true
-  rmdir "$EXTRACTED"
-fi
+  # Flatten single top-level directory if present
+  EXTRACTED=$(ls -d /data/*/ 2>/dev/null | head -1)
+  if [ -n "$EXTRACTED" ] && [ "$(ls -d /data/*/ | wc -l)" -eq 1 ]; then
+    mv "$EXTRACTED"* /data/
+    mv "$EXTRACTED".[!.]* /data/ 2>/dev/null || true
+    rmdir "$EXTRACTED"
+  fi
 
   # JVM cleanup if file exists
   if [ -f user_jvm_args.txt ]; then
@@ -154,6 +154,31 @@ fi
     sed -i '/^-Xmx/d' user_jvm_args.txt
   else
     log "⚠️  user_jvm_args.txt not found — skipping JVM arg cleanup."
+  fi
+
+  # Run Forge installer if not already installed
+  FORGE_UNIVERSAL=$(find libraries/net/minecraftforge/forge -name '*-universal.jar' 2>/dev/null | head -1)
+
+  if [ -z "$FORGE_UNIVERSAL" ]; then
+    FORGE_INSTALLER=$(find . -maxdepth 1 -name 'forge-*-installer.jar' | head -1)
+
+    if [ -z "$FORGE_INSTALLER" ]; then
+      log "❌ Forge installer not found in /data!"
+      exit 1
+    fi
+
+    log "🔨 Running Forge installer: $FORGE_INSTALLER"
+    java -jar "$FORGE_INSTALLER" --installServer
+
+    FORGE_UNIVERSAL=$(find libraries/net/minecraftforge/forge -name '*-universal.jar' 2>/dev/null | head -1)
+    if [ -n "$FORGE_UNIVERSAL" ]; then
+      log "✅ Forge installed successfully: $FORGE_UNIVERSAL"
+    else
+      log "❌ Could not locate Forge universal jar after installation!"
+      exit 1
+    fi
+  else
+    log "✅ Forge already installed: $FORGE_UNIVERSAL. Skipping installer."
   fi
 
   echo "$PACKVERSION" > .packversion
