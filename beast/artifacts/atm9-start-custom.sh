@@ -140,13 +140,14 @@ if [ "$INSTALLED_VERSION" != "$PACKVERSION" ]; then
   log "📦 Unpacking $ZIP_FILE..."
   unzip -o "$ZIP_FILE" -d /data
 
-  # Flatten single top-level directory if present
-  EXTRACTED=$(ls -d /data/*/ 2>/dev/null | head -1)
-  if [ -n "$EXTRACTED" ] && [ "$(ls -d /data/*/ | wc -l)" -eq 1 ]; then
-    mv "$EXTRACTED"* /data/
-    mv "$EXTRACTED".[!.]* /data/ 2>/dev/null || true
-    rmdir "$EXTRACTED"
-  fi
+# Flatten Server-Files-<version> top-level directory if present
+EXTRACTED=$(ls -d /data/Server-Files-*/ 2>/dev/null | head -1)
+if [ -n "$EXTRACTED" ]; then
+  log "📂 Flattening extracted directory: $EXTRACTED"
+  mv "$EXTRACTED"* /data/ 2>/dev/null || true
+  mv "$EXTRACTED".[!.]* /data/ 2>/dev/null || true
+  rmdir "$EXTRACTED" 2>/dev/null || true
+fi
 
   # JVM cleanup if file exists
   if [ -f user_jvm_args.txt ]; then
