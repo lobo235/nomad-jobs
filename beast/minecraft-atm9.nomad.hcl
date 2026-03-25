@@ -30,13 +30,29 @@ job "mc-atm9" {
         type     = "tcp"
         interval = "30s"
         timeout  = "5s"
+
+        check_restart {
+          limit           = 5        # require 5 consecutive failures before restarting
+          grace           = "50m"    # don't act on failures at all for first 50 minutes
+          ignore_warnings = false
+        }
       }
     }
 
+    update {
+      health_check      = "checks"
+      healthy_deadline  = "55m"    # worst case 45min migration + buffer
+      progress_deadline = "65m"    # must exceed healthy_deadline
+      min_healthy_time  = "30s"
+      max_parallel      = 1
+      auto_revert       = false
+      auto_promote      = false
+    }
+
     restart {
-      attempts = 3
-      interval = "2m"
-      delay    = "15s"
+      attempts = 10       # allow plenty of runtime crash recoveries
+      interval = "360m"   # 6 hour window — runtime crashes spread out won't exhaust this
+      delay    = "30s"
       mode     = "fail"
     }
 
